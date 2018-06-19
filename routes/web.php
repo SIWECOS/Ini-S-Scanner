@@ -19,7 +19,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'audit'], function() {
 
     // <app_url>/audit/now
-    Route::get('/now', ['uses' => 'AuditController@index',   'as' => 'all.logs']);
+    Route::get('/now', ['uses' => 'AuditController@new',   'as' => 'today.logs']);
 
 
 
