@@ -64,6 +64,12 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'audits' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/audits'),
+            'visibility' => 'private',
+        ],
+
     ],
 
 ];

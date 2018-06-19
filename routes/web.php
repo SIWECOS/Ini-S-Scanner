@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Audit routes
+Route::group(['prefix' => 'audit'], function() {
+
+    // <app_url>/audit/now
+    Route::get('/now', ['uses' => 'AuditController@index',   'as' => 'all.logs']);
+
+
+
+});
