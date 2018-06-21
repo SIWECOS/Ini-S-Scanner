@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Traits\AuditsTrait;
 
-class AuditController extends Controller
+class ScannerController extends Controller
 {
     use AuditsTrait;
     public $response;
@@ -27,11 +27,11 @@ class AuditController extends Controller
      * @param Request $request - data sent by http request
      * @return array JSON
      */
-    public function today(Request $request)
+    public function testare(Request $request)
     {
-        if($request->bearerToken() !== config('app.masterToken'))  // token is not valid
-            return $this->response->setStatusCode('401', 'Unauthorized. Token provided is not valid.');
-        else // token is valid
-            return $this->getTodayLog($request->type);
+        return $this->createLog('blabla');
     }
+
+
+
 }

@@ -70,6 +70,12 @@ return [
             'visibility' => 'private',
         ],
 
+        'blacklists' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/blacklists'),
+            'visibility' => 'private',
+        ],
+
     ],
 
 ];
