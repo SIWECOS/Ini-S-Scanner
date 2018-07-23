@@ -77,3 +77,4 @@ fabric.properties
 
 # Sonarlint plugin
 .idea/sonarlint
+composer\.lock
