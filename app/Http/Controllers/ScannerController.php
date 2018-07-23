@@ -29,7 +29,7 @@ class ScannerController extends Controller
      */
     public function testare(Request $request)
     {
-        return $this->createLog('blabla');
+        return $this->createLog('testare ' . date('His'));
     }
 
 
