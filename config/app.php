@@ -218,6 +218,6 @@ return [
     |
     */
 
-    'masterToken' => '8H+JX9FPnwcYnVU6JzCb+2Os',
+    'masterToken' => '12+3456MastErTOkEn78+90s',
 
 ];
