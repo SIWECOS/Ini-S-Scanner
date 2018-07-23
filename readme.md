@@ -15,7 +15,7 @@ Add in root path, .env file, based on .env.example file.
 
 This app it was designed as a part of [Siwecos Project](https://siwecos.de). That means direct http request isn't functional. Some routes (http request data sensitive), must have a specific bearer token in header authorization. As a part of a project and menat to work with an API, without DB access, the master token it's set as global system variable. Here in repository is set a dummy value for this variable, I strong advise, to modify this value, after deployment in production remote server, based on specific to the project master token. Master token can be foun in config/app.php, section 'Specific app vars', key name 'masterToken'. Dummy value is '12+3456MastErTOkEn78+90s'.  
 
-##### Routes
+### Routes
 
 **Scanner**
 
