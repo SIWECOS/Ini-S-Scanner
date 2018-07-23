@@ -17,6 +17,25 @@ This app it was designed as a part of [Siwecos Project](https://siwecos.de). Tha
 
 ##### Routes
 
+**Scanner**
+
+**Audit**  
+GET audit/today/{type}
+- consume: header authorization bearer
+- description: get logs for today, based on _type_ - which is optional parameter;  
+    * if the type is not set, return all contents;  
+    * usual values for {type} could be: all, errors, scanner (or any type set before for logs).
+- returns:  
+    * 401 Unauthorized. Token provided is not valid. (when the token is not in header of request, or is null, or is not match with 'master token')  
+    * 200 OK
+        ```json
+        {
+            "message": "success",
+            "content": [
+                "[127.0.0.1][13:34:43] testing 133443"
+            ]
+        }
+        ```
 
 
 
