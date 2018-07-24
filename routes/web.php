@@ -15,6 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Scanner routes
+Route::group(['prefix' => 'scanner'], function() {
+
+    // <app_url>/scanner/start
+    Route::post('/start', ['uses' => 'ScannerController@start',   'as' => 'start.scanner']);
+
+    // <app_url>/scanner/testare
+    Route::get('/testare', ['uses' => 'ScannerController@testare',   'as' => 'testare.scanner']);
+
+});
+
 // Audit routes
 Route::group(['prefix' => 'audit'], function() {
 
@@ -23,10 +34,3 @@ Route::group(['prefix' => 'audit'], function() {
 
 });
 
-// Audit routes
-Route::group(['prefix' => 'scanner'], function() {
-
-    // <app_url>/scanner/testare
-    Route::get('/testare', ['uses' => 'ScannerController@testare',   'as' => 'testare.scanner']);
-
-});
