@@ -19,18 +19,29 @@ trait AuditsTrait
         $response = new Response();
 
         try {
-            // set the type if is null
-            if(is_null($type))
-                $auditType = 'all';
-            else
-                $auditType = $type;
 
-            // check if file exists and get the content
-            $auditRequestedFile = $auditType . '_' . date('Ymd') . '.txt';
-            if(Storage::disk('audits')->has($auditRequestedFile))
-                $content = array_values(array_filter(explode(PHP_EOL, Storage::disk('audits')->get($auditRequestedFile))));
-            else
-                throw new Exception('File ' . $auditType . '_' . date('Ymd') . '.txt does not exist.');
+            if(is_null($type)) { // set the type if is null
+                $content = [];
+                // check if type all exist and get content
+                $auditRequestedFile = 'all_' . date('Ymd') . '.txt';
+                if (Storage::disk('audits')->has($auditRequestedFile))
+                    $content['all'] = array_values(array_filter(explode(PHP_EOL, Storage::disk('audits')->get($auditRequestedFile))));
+                // check if type errors exist and get content
+                $auditRequestedFile = 'errors_' . date('Ymd') . '.txt';
+                if (Storage::disk('audits')->has($auditRequestedFile))
+                    $content['errors'] = array_values(array_filter(explode(PHP_EOL, Storage::disk('audits')->get($auditRequestedFile))));
+                // check if type scanner exist and get content
+                $auditRequestedFile = 'scanner_' . date('Ymd') . '.txt';
+                if (Storage::disk('audits')->has($auditRequestedFile))
+                    $content['scanner'] = array_values(array_filter(explode(PHP_EOL, Storage::disk('audits')->get($auditRequestedFile))));
+            } else {
+                // check if file exists and get the content
+                $auditRequestedFile = $type . '_' . date('Ymd') . '.txt';
+                if (Storage::disk('audits')->has($auditRequestedFile))
+                    $content = array_values(array_filter(explode(PHP_EOL, Storage::disk('audits')->get($auditRequestedFile))));
+                else
+                    throw new Exception('File ' . $type . '_' . date('Ymd') . '.txt does not exist.');
+            }
 
             return response()->json(['message' => 'success', 'content' => $content], 200);
 

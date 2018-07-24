@@ -219,5 +219,10 @@ return [
     */
 
     'masterToken' => '12+3456MastErTOkEn78+90s',
+    'scannerChecks' => [
+        'phishing',
+        'spam',
+        'malware'
+    ]
 
 ];

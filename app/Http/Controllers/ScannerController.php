@@ -45,16 +45,20 @@ class ScannerController extends Controller
         try {
             //check and validate the post request
             if ( is_null($request->all()) ) {
+                $this->createLog('400 Invalid body from POST request', 'errors'); //set error
                 return $this->response->setStatusCode('400', 'Invalid body from POST request');
             } else {
                 if ( empty( $request->url ) || !is_string($request->url) || strlen( parse_url( $request->url, PHP_URL_HOST ) ) < 1 ) {
+                    $this->createLog('400 No URL is set or given', 'errors'); //set error
                     return $this->response->setStatusCode('400', 'No URL is set or given');
                 } else {
                     if ( !is_array( $request->callbackurls )) {
+                        $this->createLog('400 No CallBackURLs is set or given', 'errors'); //set error
                         return $this->response->setStatusCode('400', 'No CallBackURLs is set or given');
                     } else {
                         // all ok, start scanning
                         $clientDomain = parse_url( $request->url, PHP_URL_HOST );
+                        $this->createLog('200 Start scan domain [' . $clientDomain . ']' , 'scanner');
                     }
                 }
             }
