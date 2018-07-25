@@ -35,12 +35,13 @@ class ScannerController extends Controller
      *  }
      *
      * @param Request $request - data sent by http request
-     * @return array JSON
+     * @return Response
      * @throws Exception
      */
     public function start(Request $request)
     {
-        $result = array();
+
+        $result = [];
 
         try {
             //check and validate the post request
@@ -63,30 +64,44 @@ class ScannerController extends Controller
                         $resultsOfScanning = $this->getScannerResults($clientDomain, config('app.scannerChecks'));
                         $executionEndTime = microtime(true);
                         $this->createLog('200 STOP SCAN - scanning domain [' . $clientDomain . '] took '. number_format((float)($executionEndTime - $executionStartTime), 4, ',', '') . ' seconds to execute.' , 'scanner');
+                        // check the callbacks and return the scanning results
+                        if(isset($resultsOfScanning['message']) && $resultsOfScanning['message'] == 'fail') {
+                            $result = array(
+                                'name' => 'INI_S',
+                                'hasError' => true,
+                                'score' => 0,
+                                'errorMessage' => array(
+                                    'placeholder' => 'ERROR',
+                                    'values' => (object) array(
+                                        'Error: ' . $resultsOfScanning['exception']
+                                    )
+                                ),
+                                'tests' => array()
+                            );
+                            $this->createLog('400 Scanning domain [' . $clientDomain . '] return errors:[' . $resultsOfScanning['exception'] . ']', 'errors'); //set error
+                        } else {
+                            $result = array(
+                                'name' => 'INI_S',
+                                'hasError' => false,
+                                'score' => $this->calculateScannerScore($resultsOfScanning['collection']),
+                                'errorMessage' => array(
+                                    'placeholder' => 'NO_ERRORS',
+                                    'values' => (object) array()
+                                ),
+                                'tests' => $resultsOfScanning['collection']
+                            );
+                        }
 
+                        $this->createLog('200 Send back to the callbackUrls the scanning results' , 'scanner');
+                        $this->notifyCallbacks( $request->callbackurls, 'success', $result );
                     }
                 }
             }
 
         } catch (Exception  $exception) {
             $this->createLog('Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']', 'errors'); //set error
-            $result['exception'] = 'Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']';
+            return $this->response->setStatusCode('400', 'Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']');
         }
 
-        return response()->json($resultsOfScanning);
     }
-
-    /**
-     * Get the last content, today, of logs
-     *
-     * @param Request $request - data sent by http request
-     * @return array JSON
-     */
-    public function testare(Request $request)
-    {
-        return $this->createLog('testare ' . date('His'));
-    }
-
-
-
 }

@@ -55,52 +55,59 @@ POST scanner/start
     * _200 OK_
         ```json
         {
-        "collection": [
-            {
-                "name": "PHISHING",
-                "hasError": false,
-                "dangerlevel": 0,
-                "errorMessage": {
-                    "placeholder": "NO_ERRORS",
-                    "values": {}
-                },
-                "score": 0,
-                "scoreType": "warning",
-                "testDetails": [
-                    {
-                        "placeholder": "PHISHING_FOUND",
-                        "values": {
-                            "site": "zorgopdeboesj.nl",
-                            "where": "zorgopdeboesj.nl/grp/BofA/verification/action.php?cmd=login_submit&id=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e&session=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e, zorgopdeboesj.nl/grp/BofA/verification/action2.php?cmd=login_submit&id=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880&session=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880, zorgopdeboesj.nl/grp/BofA/verification/action4.php?cmd=login_submit&id=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7&session=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7, zorgopdeboesj.nl/grp/BofA/verification/login.php?cmd=login_submit&id=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ==&session=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ=="
+            "name": "INI_S",
+            "hasError": false,
+            "score": 66.66666666666667,
+            "errorMessage": {
+                "placeholder": "NO_ERRORS",
+                "values": {}
+            },
+            "tests": [
+                {
+                    "name": "PHISHING",
+                    "hasError": false,
+                    "dangerlevel": 0,
+                    "errorMessage": {
+                        "placeholder": "NO_ERRORS",
+                        "values": {}
+                    },
+                    "score": 0,
+                    "scoreType": "warning",
+                    "testDetails": [
+                        {
+                            "placeholder": "PHISHING_FOUND",
+                            "values": {
+                                "site": "zorgopdeboesj.nl",
+                                "where": "zorgopdeboesj.nl/grp/BofA/verification/action.php?cmd=login_submit&id=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e&session=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e, zorgopdeboesj.nl/grp/BofA/verification/action2.php?cmd=login_submit&id=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880&session=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880, zorgopdeboesj.nl/grp/BofA/verification/action4.php?cmd=login_submit&id=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7&session=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7, zorgopdeboesj.nl/grp/BofA/verification/login.php?cmd=login_submit&id=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ==&session=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ=="
+                            }
                         }
-                    }
-                ]
-            },
-            {
-                "name": "SPAM",
-                "hasError": false,
-                "dangerlevel": 0,
-                "errorMessage": {
-                    "placeholder": "NO_ERRORS",
-                    "values": {}
+                    ]
                 },
-                "score": 100,
-                "scoreType": "success",
-                "testDetails": []
-            },
-            {
-                "name": "MALWARE",
-                "hasError": false,
-                "dangerlevel": 0,
-                "errorMessage": {
-                    "placeholder": "NO_ERRORS",
-                    "values": {}
+                {
+                    "name": "SPAM",
+                    "hasError": false,
+                    "dangerlevel": 0,
+                    "errorMessage": {
+                        "placeholder": "NO_ERRORS",
+                        "values": {}
+                    },
+                    "score": 100,
+                    "scoreType": "success",
+                    "testDetails": []
                 },
-                "score": 100,
-                "scoreType": "success",
-                "testDetails": []
-            }
-        ]
+                {
+                    "name": "MALWARE",
+                    "hasError": false,
+                    "dangerlevel": 0,
+                    "errorMessage": {
+                        "placeholder": "NO_ERRORS",
+                        "values": {}
+                    },
+                    "score": 100,
+                    "scoreType": "success",
+                    "testDetails": []
+                }
+            ]
         }
         ```
 
