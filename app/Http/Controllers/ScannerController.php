@@ -59,10 +59,11 @@ class ScannerController extends Controller
                         // all ok, start scanning
                         $clientDomain = parse_url( $request->url, PHP_URL_HOST );
                         $executionStartTime = microtime(true);
-                        $this->createLog('200 Start scan domain [' . $clientDomain . ']' , 'scanner');
+                        $this->createLog('200 START SCAN - domain [' . $clientDomain . ']' , 'scanner');
                         $resultsOfScanning = $this->getScannerResults($clientDomain, config('app.scannerChecks'));
                         $executionEndTime = microtime(true);
-                        $this->createLog('200 Stop scan domain [' . $clientDomain . '], took '. ($executionEndTime - $executionStartTime) . 'seconds to execute.' , 'scanner');
+                        $this->createLog('200 STOP SCAN - scanning domain [' . $clientDomain . '] took '. number_format((float)($executionEndTime - $executionStartTime), 4, ',', '') . ' seconds to execute.' , 'scanner');
+
                     }
                 }
             }
