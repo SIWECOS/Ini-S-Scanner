@@ -46,6 +46,7 @@ trait AuditsTrait
             return response()->json(['message' => 'success', 'content' => $content], 200);
 
         } catch(Exception $exception) {
+            $this->createLog('Exception #400 Exception: ' . $exception->getMessage(), 'errors'); //set error
             return $response->setStatusCode('400', 'Exception: ' . $exception->getMessage());
         }
     }
@@ -79,6 +80,7 @@ trait AuditsTrait
             return response()->json(['message' => 'success'], 200);
 
         } catch(Exception $exception) {
+            $this->createLog('Exception #400 Exception: ' . $exception->getMessage(), 'errors'); //set error
             return $response->setStatusCode('400', 'Exception: ' . $exception->getMessage());
         }
     }

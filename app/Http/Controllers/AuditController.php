@@ -29,9 +29,11 @@ class AuditController extends Controller
      */
     public function today(Request $request)
     {
-        if($request->bearerToken() !== config('app.masterToken'))  // token is not valid
+        if($request->bearerToken() !== config('app.masterToken')) {  // token is not valid
+            $this->createLog('Exception #401 [Unauthorized. Token provided is not valid.]', 'errors'); //set error
             return $this->response->setStatusCode('401', 'Unauthorized. Token provided is not valid.');
-        else // token is valid
+        } else { // token is valid
             return $this->getTodayLog($request->type);
+        }
     }
 }

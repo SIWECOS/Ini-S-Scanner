@@ -58,16 +58,21 @@ class ScannerController extends Controller
                     } else {
                         // all ok, start scanning
                         $clientDomain = parse_url( $request->url, PHP_URL_HOST );
+                        $executionStartTime = microtime(true);
                         $this->createLog('200 Start scan domain [' . $clientDomain . ']' , 'scanner');
+                        $resultsOfScanning = $this->getScannerResults($clientDomain, config('app.scannerChecks'));
+                        $executionEndTime = microtime(true);
+                        $this->createLog('200 Stop scan domain [' . $clientDomain . '], took '. ($executionEndTime - $executionStartTime) . 'seconds to execute.' , 'scanner');
                     }
                 }
             }
 
         } catch (Exception  $exception) {
+            $this->createLog('Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']', 'errors'); //set error
             $result['exception'] = 'Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']';
         }
 
-        return response()->json($clientDomain);
+        return response()->json($resultsOfScanning);
     }
 
     /**

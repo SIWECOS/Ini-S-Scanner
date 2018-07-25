@@ -25,6 +25,13 @@ Initiative-S scanner compares the domain with known blacklists for phishing, mal
 5. [optional] In root path, generate a cripted key <code>php artisan key:generate</code>, normally this command, should modify automated the .env file. 
 6. After install, folders (and their whole contents): **storage** si **bootstrap/cache**, should be free for writing, not just read.
 
+### Configuration
+
+In **config/app.php**, section "Specific app vars", you can found and modify all configuration variables.  
+1. "masterToken" - used for header authorization, for some specific security sensitive end-points;
+2. "scannerChecks" - major types of blacklists, which scanner check the domain against;
+3.  
+
 ## Usage
 
 This app it was designed as a part of [Siwecos Project](https://siwecos.de). That means direct http request isn't functional. Some routes (http request data sensitive), must have a specific bearer token in header authorization. As a part of a project and meant to work with an API, without DB access, the master token it's set as global system variable. Here in repository is set a dummy value for this variable, we strongly advise, to modify this value, after deployment in production remote server, based on specific to the project master token. Master token can be found in config/app.php, section 'Specific app vars', key name 'masterToken'. Dummy value is "12+3456MastErTOkEn78+90s".  

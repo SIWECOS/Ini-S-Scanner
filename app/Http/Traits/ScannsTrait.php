@@ -4,41 +4,115 @@ namespace App\Http\Traits;
 
 use Storage;
 use Exception;
-use Illuminate\Http\Response;
 
 trait ScannsTrait
 {
 
     /**
-     * Post new data in audit file
+     * Return scanning results
      *
-     * @param string $data Data content to add to log file
-     * @param string|null $type Type of audit: all, errors, scanner
-     *
-     * @return array JSON
+     * @param string $url Domain sent for scanning
+     * @param array $scanChecks Array with scanner checks
+     * @return array
      */
-//    public function createLog($data, $type = null)
-//    {
-//        $response = new Response();
-//        $data = '[' . $_SERVER['REMOTE_ADDR'] . '][' . date('H:i:s') . '] ' . $data;
-//
-//        try {
-//            // set the type if is null
-//            if(is_null($type))
-//                $auditType = 'all';
-//            else
-//                $auditType = $type;
-//
-//            // check if file exists and append the content
-//            if(Storage::disk('audits')->has($auditType . '_' . date('Ymd') . '.txt'))
-//                Storage::disk('audits')->append($auditType . '_' . date('Ymd') . '.txt', $data);
-//            else
-//                Storage::disk('audits')->put($auditType . '_' . date('Ymd') . '.txt', $data);
-//
-//            return response()->json(['message' => 'success'], 200);
-//
-//        } catch(Exception $exception) {
-//            return $response->setStatusCode('400', 'Exception: ' . $exception->getMessage());
-//        }
-//    }
+    public function getScannerResults($url, $scanChecks)
+    {
+        $result = array();
+
+        try {
+            foreach($scanChecks as $scanCheck)
+            {
+                // check if domain is present in specific blacklist
+                $searchUrl = $this->searchUrl($scanCheck, $url);
+                if(isset($searchUrl['message']) && $searchUrl['message'] == 'fail')
+                    throw new Exception($searchUrl['exception']);
+                else
+                    $result['collection'][] = $searchUrl['collection'];
+            }
+        } catch (Exception $exception) {
+            $result['exception'] = 'Exception [' . $exception->getMessage() . ']';
+            $result['exception'] .= (is_null($exception->getFile())) ? '' : ' in file [' . $exception->getFile() . ']';
+            $result['exception'] .= (is_null($exception->getLine())) ? '' : ', line: ' . $exception->getLine();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if url is present in specific scanning results file.
+     *
+     * @param string $file File name
+     * @param string $url Url for extract data
+     *
+     * @return array
+     */
+    public function searchUrl( $file, $url ) {
+        $result       = array();
+        $scanTestName = $file;
+        $file         = $file . '.json';
+
+        try {
+            if (Storage::disk('blacklists')->has($file)) {
+                $scanArray     = json_decode( Storage::disk('blacklists')->get($file) );
+                $filteredArray = array_filter( $scanArray, function ( $element ) use ( $url ) {
+                    if ( isset( $element ) ) {
+                        // avoid results with the url included in another url (ex.: test.de and abntest.de)
+                        $splitElement = explode( '/', $element ); // check if element is a long url
+                        if ( isset( $splitElement ) && is_array( $splitElement ) ) {
+                            $hostDomain = parse_url('http://' . $element, PHP_URL_HOST);
+                            if ( in_array( $url, $splitElement ) && $hostDomain === $url ) {
+                                return $element;
+                            }
+                        } else {
+                            if ( strpos( $element, $url ) !== false ) {
+                                return $element;
+                            }
+                        }
+                    }
+                } );
+                if ( is_array( $filteredArray ) && count( $filteredArray ) > 0 ) {
+                    $result['collection']['name']         = strtoupper( $scanTestName );
+                    $result['collection']['hasError']     = false;
+                    $result['collection']['dangerlevel']  = 0;
+                    $result['collection']['errorMessage'] = array(
+                        'placeholder' => 'NO_ERRORS',
+                        'values' => (object) array()
+                    );
+                    $result['collection']['score']         = 0;
+                    $result['collection']['scoreType']    = 'warning';
+                    $tempTestDetails['placeholder'] = strtoupper($scanTestName) . '_FOUND';
+                    $tempTestDetails['values']['site'] = $url;
+                    $tempWhere = array();
+                    foreach ( $filteredArray as $occurence ) {
+                        $tempWhere[] = $occurence;
+                    }
+                    $tempTestDetails['values']['where'] = implode(', ', $tempWhere);
+                    $result['collection']['testDetails'][]  = (object) $tempTestDetails;
+                    $this->createLog('200 Found occurences in the blacklist [' . strtoupper($scanTestName) . '] for the url [' . $url . ']' , 'scanner');
+                } else {
+                    $result['collection']['name']         = strtoupper( $scanTestName );
+                    $result['collection']['hasError']     = false;
+                    $result['collection']['dangerlevel']  = 0;
+                    $result['collection']['errorMessage'] = array(
+                        'placeholder' => 'NO_ERRORS',
+                        'values' => (object) array()
+                    );
+                    $result['collection']['score']        = 100;
+                    $result['collection']['scoreType']    = 'success';
+                    $result['collection']['testDetails']  = array();
+                    $this->createLog('200 No occurences in the blacklist [' . strtoupper($scanTestName) . '] for the url [' . $url . ']' , 'scanner');
+                }
+            } else {
+                throw new Exception( 'File [' . $file . '] doesn\'t exist.' );
+            }
+        } catch ( Exception $exception ) {
+            $result['message']     = 'fail';
+            $result['exception'] = 'Exception [' . $exception->getMessage() . ']';
+            $result['exception'] .= (is_null($exception->getFile())) ? '' : ' in file [' . $exception->getFile() . ']';
+            $result['exception'] .= (is_null($exception->getLine())) ? '' : ', line: ' . $exception->getLine();
+        }
+
+        return $result;
+    }
+
 }
