@@ -132,7 +132,7 @@ GET audit/today/{type}
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within this scanner, please send an e-mail to Botfrei via [tehnik@initiative-s.de](mailto:tehnik@initiative-s.de). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this scanner, please send an e-mail to Botfrei via [technik@initiative-s.de](mailto:technik@initiative-s.de). All security vulnerabilities will be promptly addressed.
 
 ## License
 
