@@ -191,4 +191,247 @@ trait ScannsTrait
             return 0;
         }
     }
+
+    /**
+     * Get data from a provider.
+     *
+     * @param string $provider Provider name
+     * @param string $url Url for extract data
+     * @param string|bool $type The type of extraction (gzip, array, line, etc.) - false by default
+     * @param array|bool $replaceArr The protocols which need to be crop it down (http, https, etc.) - false by default
+     * @param string $separator The separator for lines in text file - "\r\n" by default
+     *
+     * @return array
+     */
+    public function getBlacklistData( $provider, $url, $type = false, $replaceArr = false, $separator = "\r\n" ) {
+        $result = array();
+
+        try {
+            if ( is_null( $provider ) || strlen( $provider ) < 1 ) {
+                throw new Exception( 'Provider didn\'t set.' );
+            }
+
+            switch ( $provider ) {
+                case 'phishtank':
+                    $getProviderData = gzfile( $url );
+                    if ( is_array( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $tmpData              = json_decode( implode( $getProviderData ), true );
+                        foreach ( $tmpData as $line ) {
+                            if ( $line['verified'] == 'yes' ) {
+                                $result['collection'][] = utf8_encode( str_replace( $replaceArr, '', $line['url'] ) );
+                            }
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'hosts-file-phish':
+                case 'hosts-file-emd':
+                case 'hosts-file-exp':
+                case 'hosts-file-fsa':
+                case 'hosts-file-hjk':
+                case 'hosts-file-wrz':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            if ( $line[0] !== '#' ) {
+                                $lineSplit = preg_split( '/\s+/', $line );
+                                if ( $lineSplit[1] !== 'localhost' ) {
+                                    $result['collection'][] = utf8_encode( $lineSplit[1] );
+                                }
+                            }
+                            $line = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'openphish':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            $result['collection'][] = utf8_encode( str_replace( $replaceArr, '', $line ) );
+                            $line                   = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'joewein':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            $lineSplit = explode( ';', $line );
+                            if ( is_array( $lineSplit ) && count( $lineSplit ) > 0 ) {
+                                $result['collection'][] = utf8_encode( $lineSplit[0] );
+                            } else {
+                                $result['collection'][] = utf8_encode( trim( $line ) );
+                            }
+                            $line = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'bambenekconsulting':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            if ( $line[0] !== '#' ) {
+                                $lineSplit              = explode( ',', $line );
+                                $result['collection'][] = utf8_encode( $lineSplit[0] );
+                            }
+                            $line = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'malwaredomainlist':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            if ( $line[0] !== '#' ) {
+                                $result['collection'][] = utf8_encode( trim( str_replace( '127.0.0.1', '', $line ) ) );
+                            }
+                            $line = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'ransomwaretracker':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            if ( $line[0] !== '#' ) {
+                                $result['collection'][] = utf8_encode( str_replace( $replaceArr, '', $line ) );
+                            }
+                            $line = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                case 'zeustracker':
+                    $getProviderData = $this->getRemoteData( $url );
+                    if ( is_string( $getProviderData ) ) {
+                        $result['message']    = 'success';
+                        $result['collection'] = array();
+                        $line                 = strtok( $getProviderData, $separator );
+                        while ( $line !== false ) {
+                            if ( $line[0] !== '#' ) {
+                                $result['collection'][] = utf8_encode( trim( $line ) );
+                            }
+                            $line = strtok( $separator );
+                        }
+                        array_unique( $result['collection'] );
+                        sort( $result['collection'] );
+                    } else {
+                        throw new Exception( 'Provider data invalid.' );
+                    }
+                    break;
+                default:
+                    throw new Exception( 'Provider didn\'t found in config array.' );
+            }
+        } catch ( Exception $exception ) {
+            $result['message']     = 'fail';
+            $result['description'] = 'Exception [' . $exception->getMessage() . ']';
+            $result['description'] .= ( is_null( $exception->getFile() ) ) ? '' : ' in file' . $exception->getFile();
+            $result['description'] .= ( is_null( $exception->getLine() ) ) ? '' : ', line: ' . $exception->getLine();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get remote data with curl.
+     *
+     * @param string $url Remote url
+     * @param string|boolean $postParams Post parameters
+     *
+     * @return mixed
+     */
+    public function getRemoteData( $url, $postParams = false ) {
+        $curl = curl_init();
+        curl_setopt( $curl, CURLOPT_URL, $url );
+        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+        if ( $postParams ) {
+            curl_setopt( $curl, CURLOPT_POST, true );
+            curl_setopt( $curl, CURLOPT_POSTFIELDS, "var1=bla&" . $postParams );
+        }
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, false );
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0" );
+        curl_setopt( $curl, CURLOPT_COOKIE, 'CookieName1=Value;' );
+        curl_setopt( $curl, CURLOPT_MAXREDIRS, 10 );
+        $followAllowed = ( ini_get( 'open_basedir' ) || ini_get( 'safe_mode' ) ) ? false : true;
+        if ( $followAllowed ) {
+            curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, 1 );
+        }
+        curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, 9 );
+        curl_setopt( $curl, CURLOPT_REFERER, $url );
+        curl_setopt( $curl, CURLOPT_TIMEOUT, 60 );
+        curl_setopt( $curl, CURLOPT_AUTOREFERER, true );
+        curl_setopt( $curl, CURLOPT_ENCODING, 'gzip,deflate' );
+        $data   = curl_exec( $curl );
+        $status = curl_getinfo( $curl );
+        curl_close( $curl );
+        preg_match( '/(http(|s)):\/\/(.*?)\/(.*\/|)/si', $status['url'], $link );
+        $data = preg_replace( '/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/|\/)).*?)(\'|\")/si', '$1=$2' . $link[0] . '$3$4$5', $data );
+        $data = preg_replace( '/(src|href|action)=(\'|\")((?!(http|https|javascript:|\/\/)).*?)(\'|\")/si', '$1=$2' . $link[1] . '://' . $link[3] . '$3$4$5', $data );
+        if ( $status['http_code'] == 200 ) {
+            return $data;
+        } elseif ( $status['http_code'] == 301 || $status['http_code'] == 302 ) {
+            if ( ! $followAllowed ) {
+                if ( ! empty( $status['redirect_url'] ) ) {
+                    $redirURL = $status['redirect_url'];
+                } else {
+                    preg_match( '/href\=\"(.*?)\"/si', $data, $match );
+                    if ( ! empty( $match[1] ) ) {
+                        $redirURL = $match[1];
+                    }
+                }
+                if ( ! empty( $redirURL ) ) {
+                    return call_user_func( __FUNCTION__, $redirURL, $postParams );
+                }
+            }
+        }
+
+        return "ERROR CODE 22 with $url!!<br/>Last status codes<b/>: " . json_encode( $status ) . "<br/><br/>Last data got<br/>: $data";
+    }
 }

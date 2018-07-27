@@ -226,18 +226,18 @@ return [
     ],
     'blacklists' => [
         'phishing' => [
-            'phishtank' => [
-                'name' => 'https://data.phishtank.com/',
-                'url' => 'http://trdesign.ro/start/verified_online.json.gz',
+            'name_of_provider' => [
+                'name' => 'provider_web_site',
+                'url' => 'provider data repository|file',
                 'type' => 'gzip',
                 'replaceArr' => ['http://', 'https://'],
                 'separator' => false
             ]
         ],
         'spam' => [
-            'joewein' => [
-                'name' => 'http://www.joewein.net/spam/blacklist.htm',
-                'url' => 'http://trdesign.ro/start/dom-bl-base.txt',
+            'name_of_provider' => [
+                'name' => 'provider_web_site',
+                'url' => 'provider data repository|file',
                 'type' => 'line',
                 'replaceArr' => false,
                 'separator' => "\r\n"

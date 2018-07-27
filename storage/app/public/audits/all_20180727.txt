@@ -1,0 +1,32 @@
+[127.0.0.1][07:53:13] 200 Start refresh blacklists
+[127.0.0.1][07:53:13] 200 Stop refresh blacklists, took 0,0039 seconds to execute.
+[127.0.0.1][07:59:09] 200 Start refresh blacklists
+[127.0.0.1][08:01:19] 200 Start refresh blacklists
+[127.0.0.1][08:01:21] 200 Stop refresh blacklists, took 2,0475 seconds to execute.
+[127.0.0.1][08:02:46] 200 Start refresh blacklists
+[127.0.0.1][08:02:48] 200 Stop refresh blacklists, took 2,1969 seconds to execute.
+[127.0.0.1][08:03:19] 200 Start refresh blacklists
+[127.0.0.1][08:03:21] 200 Stop refresh blacklists, took 2,1869 seconds to execute.
+[127.0.0.1][08:06:02] 200 Start refresh blacklists
+[127.0.0.1][08:06:04] 200 Stop refresh blacklists, took 2,1069 seconds to execute.
+[127.0.0.1][08:13:36] 200 Start refresh blacklists
+[127.0.0.1][08:14:23] 200 Start refresh blacklists
+[127.0.0.1][08:14:25] 200 Stop refresh blacklists, took 1,6147 seconds to execute.
+[127.0.0.1][08:15:41] 200 Start refresh blacklists
+[127.0.0.1][08:15:43] 200 Stop refresh blacklists, took 1,9204 seconds to execute.
+[127.0.0.1][08:16:11] 200 Start refresh blacklists
+[127.0.0.1][08:16:12] 200 Stop refresh blacklists, took 1,4001 seconds to execute.
+[127.0.0.1][08:16:41] 200 Start refresh blacklists
+[127.0.0.1][08:16:43] 200 Stop refresh blacklists, took 1,6929 seconds to execute.
+[127.0.0.1][08:23:33] 200 Start refresh blacklists
+[127.0.0.1][08:23:35] 200 Successfully refresh phishtank blacklist
+[127.0.0.1][08:23:35] 200 Stop refresh blacklists, took 1,5344 seconds to execute.
+[127.0.0.1][08:25:35] 200 Start refresh blacklists
+[127.0.0.1][08:25:37] 200 Successfully refresh phishing blacklist
+[127.0.0.1][08:25:37] 200 Stop refresh blacklists, took 1,5634 seconds to execute.
+[127.0.0.1][08:43:43] 200 Start refresh blacklists
+[127.0.0.1][08:43:45] 200 Successfully refresh spam blacklist
+[127.0.0.1][08:43:45] 200 Stop refresh blacklists, took 1,6407 seconds to execute.
+[127.0.0.1][09:00:27] 200 Start refresh blacklists
+[127.0.0.1][09:00:28] 200 Successfully refresh malware blacklist
+[127.0.0.1][09:00:28] 200 Stop refresh blacklists, took 0,5703 seconds to execute.
