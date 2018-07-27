@@ -30,6 +30,7 @@ Initiative-S scanner compares the domain with known blacklists for phishing, mal
 In **config/app.php**, section "Specific app vars", you can found and modify all configuration variables.  
 1. "masterToken" - used for header authorization, for some specific security sensitive end-points;
 2. "scannerChecks" - major types of blacklists, which scanner check the domain against;
+3. "blacklists" - list of blacklists, organised by type and contain all parameters for scrap the custom data provided 
 
 ## Usage
 
@@ -77,8 +78,8 @@ POST scanner/start
                         {
                             "placeholder": "PHISHING_FOUND",
                             "values": {
-                                "site": "zorgopdeboesj.nl",
-                                "where": "zorgopdeboesj.nl/grp/BofA/verification/action.php?cmd=login_submit&id=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e&session=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e, zorgopdeboesj.nl/grp/BofA/verification/action2.php?cmd=login_submit&id=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880&session=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880, zorgopdeboesj.nl/grp/BofA/verification/action4.php?cmd=login_submit&id=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7&session=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7, zorgopdeboesj.nl/grp/BofA/verification/login.php?cmd=login_submit&id=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ==&session=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ=="
+                                "site": "test.com",
+                                "where": "test.com/grp/BofA/verification/action.php?cmd=login_submit&id=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e&session=205cdb22d9ab1e9f240e78e562a93f8e205cdb22d9ab1e9f240e78e562a93f8e, test.com/grp/BofA/verification/action2.php?cmd=login_submit&id=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880&session=b8e7dd50358b8eba106fe6571ab3c880b8e7dd50358b8eba106fe6571ab3c880, test.com/grp/BofA/verification/action4.php?cmd=login_submit&id=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7&session=35373912ae9fcb92cbcff0038474c8d735373912ae9fcb92cbcff0038474c8d7, test.com/grp/BofA/verification/login.php?cmd=login_submit&id=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ==&session=MTg0OTkxNDk0NQ==MTg0OTkxNDk0NQ=="
                             }
                         }
                     ]
@@ -131,7 +132,7 @@ GET audit/today/{type}
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within this scanner, please send an e-mail to Botfrei via [botfrei@eco.de](mailto:botfrei@eco.de). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this scanner, please send an e-mail to Botfrei via [tehnik@initiative-s.de](mailto:tehnik@initiative-s.de). All security vulnerabilities will be promptly addressed.
 
 ## License
 

@@ -21,8 +21,8 @@ Route::group(['prefix' => 'scanner'], function() {
     // <app_url>/scanner/start
     Route::post('/start', ['uses' => 'ScannerController@start',   'as' => 'start.scanner']);
 
-    // <app_url>/scanner/testare
-    Route::get('/testare', ['uses' => 'ScannerController@testare',   'as' => 'testare.scanner']);
+    // <app_url>/scanner/update-blacklists/{type} -> {type} is optional
+    Route::get('/update-blacklists/{type?}', ['uses' => 'ScannerController@updateBlacklists',   'as' => 'updateBlacklists.scanner']);
 
 });
 

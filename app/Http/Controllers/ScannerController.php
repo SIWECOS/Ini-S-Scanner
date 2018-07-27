@@ -41,8 +41,6 @@ class ScannerController extends Controller
     public function start(Request $request)
     {
 
-        $result = [];
-
         try {
             //check and validate the post request
             if ( is_null($request->all()) ) {
@@ -103,5 +101,17 @@ class ScannerController extends Controller
             return $this->response->setStatusCode('400', 'Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']');
         }
 
+    }
+
+    /**
+     * Update the blacklists, using a cron job
+     *
+     * @param Request $request - data sent by http request
+     * @return Response
+     * @throws Exception
+     */
+    public function updateBlacklists(Request $request)
+    {
+        return $this->response('testing testing testing')->setStatusCode('200', 'Testing update');
     }
 }
