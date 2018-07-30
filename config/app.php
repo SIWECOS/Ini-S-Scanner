@@ -245,8 +245,8 @@ return [
         ],
         'malware' => [
             'malwaredomainlist' => [
-                'name' => 'http://www.malwaredomainlist.com/mdl.php',
-                'url' => 'http://www.malwaredomainlist.com/hostslist/hosts.txt',
+                'name' => 'provider_web_site',
+                'url' => 'provider data repository|file',
                 'type' => 'line',
                 'replaceArr' => false,
                 'separator' => "\r\n"
