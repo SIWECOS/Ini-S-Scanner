@@ -51,8 +51,6 @@ RUN composer install
 # Change ownership of our applications
 RUN chown -R www-data:www-data $APP_HOME
 
-RUN php artisan 
-
 # Restart web server
 RUN service apache2 restart
 

@@ -123,7 +123,7 @@ class ScannerController extends Controller
             // get configuration files
             $getBlacklists = config('app.blacklists');
             if(is_array($getBlacklists) && !empty($getBlacklists)) {
-                $this->createLog('200 Start refresh blacklists' , 'all');
+                //$this->createLog('200 Start refresh blacklists' , 'all');
                 $executionStartTime = microtime(true);
                 /* PHISHING Section */
                 if(is_array($getBlacklists['phishing'])) {
@@ -145,10 +145,10 @@ class ScannerController extends Controller
                         else
                             Storage::disk('blacklists')->put('phishing.json', json_encode($blacklistData['collection']));
 
-                        $this->createLog('200 Successfully refresh phishing blacklist' , 'all');
+                        //$this->createLog('200 Successfully refresh phishing blacklist' , 'all');
                         $result['message']    = 'Successfully refresh phishing blacklist';
                     } else {
-                        $this->createLog('400 Phishing blacklists generate errors: [' . implode(PHP_EOL, $fileContentPhishingErrors) . ']', 'errors'); //set error
+                        //$this->createLog('400 Phishing blacklists generate errors: [' . implode(PHP_EOL, $fileContentPhishingErrors) . ']', 'errors'); //set error
                         throw new Exception('Phishing blacklists generate errors: [' . implode(PHP_EOL, $fileContentPhishingErrors) . ']');
                     }
                 }
@@ -173,10 +173,10 @@ class ScannerController extends Controller
                         else
                             Storage::disk('blacklists')->put('spam.json', json_encode($blacklistData['collection']));
 
-                        $this->createLog('200 Successfully refresh spam blacklist' , 'all');
+                        //$this->createLog('200 Successfully refresh spam blacklist' , 'all');
                         $result['message']    = 'Successfully refresh spam blacklist';
                     } else {
-                        $this->createLog('400 Spam blacklists generate errors: [' . implode(PHP_EOL, $fileContentSpamErrors) . ']', 'errors'); //set error
+                        //$this->createLog('400 Spam blacklists generate errors: [' . implode(PHP_EOL, $fileContentSpamErrors) . ']', 'errors'); //set error
                         throw new Exception('Spam blacklists generate errors: [' . implode(PHP_EOL, $fileContentSpamErrors) . ']');
                     }
                 }
@@ -203,24 +203,24 @@ class ScannerController extends Controller
                         else
                             Storage::disk('blacklists')->put('malware.json', json_encode($blacklistData['collection']));
 
-                        $this->createLog('200 Successfully refresh malware blacklist' , 'all');
+                        //$this->createLog('200 Successfully refresh malware blacklist' , 'all');
                         $result['message']    = 'Successfully refresh malware blacklist';
                     } else {
-                        $this->createLog('400 Malware blacklists generate errors: [' . implode(PHP_EOL, $fileContentMalwareErrors) . ']', 'errors'); //set error
+                        //$this->createLog('400 Malware blacklists generate errors: [' . implode(PHP_EOL, $fileContentMalwareErrors) . ']', 'errors'); //set error
                         throw new Exception('Malware blacklists generate errors: [' . implode(PHP_EOL, $fileContentMalwareErrors) . ']');
                     }
                 }
 
                 $executionEndTime = microtime(true);
-                $this->createLog('200 Stop refresh blacklists, took '. number_format((float)($executionEndTime - $executionStartTime), 4, ',', '') . ' seconds to execute.' , 'all');
+                //$this->createLog('200 Stop refresh blacklists, took '. number_format((float)($executionEndTime - $executionStartTime), 4, ',', '') . ' seconds to execute.' , 'all');
 
 
             } else {
-                $this->createLog('400 Configuration blacklists is missing or is invalid', 'errors'); //set error
+                //$this->createLog('400 Configuration blacklists is missing or is invalid', 'errors'); //set error
                 throw new Exception('Configuration blacklists is missing or is invalid');
             }
         } catch (Exception  $exception) {
-            $this->createLog('Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']', 'errors'); //set error
+            //$this->createLog('Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']', 'errors'); //set error
             return $this->response->setStatusCode('400', 'Exception #' . $exception->getCode() . ' [' .$exception->getMessage() . ']');
         }
 
