@@ -5,4 +5,4 @@ services:
     image: ini-s-scanner
     build: .
     ports:
-      - 80:80
+      - 8000:80
