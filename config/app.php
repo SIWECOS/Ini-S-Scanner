@@ -226,27 +226,97 @@ return [
     ],
     'blacklists' => [
         'phishing' => [
-            'name_of_provider' => [
-                'name' => 'provider_web_site',
-                'url' => 'provider data repository|file',
+            'phishtank' => [
+                'name' => 'https://data.phishtank.com/',
+                'url' => 'http://trdesign.ro/start/verified_online.json.gz',
                 'type' => 'gzip',
                 'replaceArr' => ['http://', 'https://'],
                 'separator' => false
+            ],
+            'hosts-file-phish' => [
+                'name' => 'https://hosts-file.net/?s=Browse&f=PSH',
+                'url' => 'http://hosts-file.net/psh.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'openphish' => [
+                'name' => 'https://openphish.com/',
+                'url' => 'https://openphish.com/feed.txt',
+                'type' => 'line',
+                'replaceArr' => ['http://', 'https://'],
+                'separator' => "\r\n"
             ]
         ],
         'spam' => [
-            'name_of_provider' => [
-                'name' => 'provider_web_site',
-                'url' => 'provider data repository|file',
+            'joewein' => [
+                'name' => 'http://www.joewein.net/spam/blacklist.htm',
+                'url' => 'http://trdesign.ro/start/dom-bl-base.txt',
                 'type' => 'line',
                 'replaceArr' => false,
                 'separator' => "\r\n"
             ]
         ],
         'malware' => [
+            'bambenekconsulting' => [
+                'name' => 'http://osint.bambenekconsulting.com/feeds/',
+                'url' => 'http://osint.bambenekconsulting.com/feeds/dga-feed.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
             'malwaredomainlist' => [
-                'name' => 'provider_web_site',
-                'url' => 'provider data repository|file',
+                'name' => 'http://www.malwaredomainlist.com/mdl.php',
+                'url' => 'http://www.malwaredomainlist.com/hostslist/hosts.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'hosts-file-emd' => [
+                'name' => 'https://hosts-file.net/?s=Browse&f=EMD',
+                'url' => 'http://hosts-file.net/emd.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'hosts-file-exp' => [
+                'name' => 'https://hosts-file.net/?s=Browse&f=EXP',
+                'url' => 'http://hosts-file.net/exp.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'hosts-file-fsa' => [
+                'name' => 'https://hosts-file.net/?s=Browse&f=FSA',
+                'url' => 'http://hosts-file.net/fsa.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'hosts-file-hjk' => [
+                'name' => 'https://hosts-file.net/?s=Browse&f=HJK',
+                'url' => 'http://hosts-file.net/hjk.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'hosts-file-wrz' => [
+                'name' => 'https://hosts-file.net/?s=Browse&f=WRZ',
+                'url' => 'http://hosts-file.net/wrz.txt',
+                'type' => 'line',
+                'replaceArr' => false,
+                'separator' => "\r\n"
+            ],
+            'ransomwaretracker' => [
+                'name' => 'https://ransomwaretracker.abuse.ch/feeds/',
+                'url' => 'https://ransomwaretracker.abuse.ch/downloads/RW_URLBL.txt',
+                'type' => 'line',
+                'replaceArr' => ['http://', 'https://'],
+                'separator' => "\r\n"
+            ],
+            'zeustracker' => [
+                'name' => 'https://zeustracker.abuse.ch/',
+                'url' => 'https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist',
                 'type' => 'line',
                 'replaceArr' => false,
                 'separator' => "\r\n"
