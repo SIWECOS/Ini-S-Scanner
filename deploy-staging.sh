@@ -10,5 +10,5 @@ gcloud --quiet config set container/cluster $CLUSTER_NAME_PRD
 gcloud --quiet config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
 gcloud --quiet container clusters get-credentials $CLUSTER_NAME_PRD
 
-kubectl patch deployment siwecos-business-layer-staging --namespace staging -p \
+kubectl patch deployment ini-s-scanner --namespace staging -p \
   "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\", \"commit\":\"$TRAVIS_COMMIT\"}}}}}"
