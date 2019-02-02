@@ -15,7 +15,7 @@ trait ScannsTrait
      * @param array $scanChecks Array with scanner checks
      * @return array
      */
-    public function getScannerResults($url, $scanChecks)
+    public static function getScannerResults($url, $scanChecks)
     {
         $result = array();
 
@@ -23,7 +23,7 @@ trait ScannsTrait
             foreach($scanChecks as $scanCheck)
             {
                 // check if domain is present in specific blacklist
-                $searchUrl = $this->searchUrl($scanCheck, $url);
+                $searchUrl = self::searchUrl($scanCheck, $url);
                 if(isset($searchUrl['message']) && $searchUrl['message'] == 'fail')
                     throw new Exception($searchUrl['exception']);
                 else
@@ -47,7 +47,7 @@ trait ScannsTrait
      *
      * @return array
      */
-    public function searchUrl( $file, $url ) {
+    public static function searchUrl( $file, $url ) {
         $result       = array();
         $scanTestName = $file;
         $file         = $file . '.json';
@@ -89,7 +89,7 @@ trait ScannsTrait
                     }
                     $tempTestDetails['values']['where'] = implode(', ', $tempWhere);
                     $result['collection']['testDetails'][]  = (object) $tempTestDetails;
-                    $this->createLog('200 Found occurences in the blacklist [' . strtoupper($scanTestName) . '] for the url [' . $url . ']' , 'scanner');
+                    AuditsTrait::createLog('200 Found occurences in the blacklist [' . strtoupper($scanTestName) . '] for the url [' . $url . ']' , 'scanner');
                 } else {
                     $result['collection']['name']         = strtoupper( $scanTestName );
                     $result['collection']['hasError']     = false;
@@ -101,7 +101,7 @@ trait ScannsTrait
                     $result['collection']['score']        = 100;
                     $result['collection']['scoreType']    = 'success';
                     $result['collection']['testDetails']  = array();
-                    $this->createLog('200 No occurences in the blacklist [' . strtoupper($scanTestName) . '] for the url [' . $url . ']' , 'scanner');
+                    AuditsTrait::createLog('200 No occurences in the blacklist [' . strtoupper($scanTestName) . '] for the url [' . $url . ']' , 'scanner');
                 }
             } else {
                 throw new Exception( 'File [' . $file . '] doesn\'t exist.' );
@@ -125,7 +125,7 @@ trait ScannsTrait
      *
      * @return void
      */
-    public function notifyCallbacks( $callbackurls, $type, $answer ) {
+    public static function notifyCallbacks( $callbackurls, $type, $answer ) {
         if ( $type === 'error' ) {
             $result = array(
                 'name' => 'INI-S',
@@ -180,7 +180,7 @@ trait ScannsTrait
      *
      * @return integer
      */
-    public function calculateScannerScore( $scanChecks ) {
+    public static function calculateScannerScore( $scanChecks ) {
         if(is_array($scanChecks)) {
             $riskTotal = 0;
             foreach($scanChecks as $scanCheck){

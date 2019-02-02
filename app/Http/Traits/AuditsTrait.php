@@ -59,10 +59,10 @@ trait AuditsTrait
      *
      * @return array JSON
      */
-    public function createLog($data, $type = null)
+    public static function createLog($data, $type = null)
     {
         $response = new Response();
-        $data = '[' . $_SERVER['REMOTE_ADDR'] . '][' . date('H:i:s') . '] ' . $data;
+        $data = '[' . date('H:i:s') . '] ' . $data;
 
         try {
             // set the type if is null
@@ -80,7 +80,7 @@ trait AuditsTrait
             return response()->json(['message' => 'success'], 200);
 
         } catch(Exception $exception) {
-            $this->createLog('Exception #400 Exception: ' . $exception->getMessage(), 'errors'); //set error
+            self::createLog('Exception #400 Exception: ' . $exception->getMessage(), 'errors'); //set error
             return $response->setStatusCode('400', 'Exception: ' . $exception->getMessage());
         }
     }

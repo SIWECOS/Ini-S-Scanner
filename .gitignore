@@ -78,3 +78,7 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 composer\.lock
+
+docker-compose.yml
+*.dev
+docker-compose.*

@@ -228,20 +228,6 @@ return [
 
         'phishing' => [
 
-            'phishtank' => [
-
-                'name' => 'https://data.phishtank.com/',
-
-                'url' => 'http://data.phishtank.com/data/' . env('PHISH_APP_KEY', '') . '/online-valid.json.gz',
-
-                'type' => 'gzip',
-
-                'replaceArr' => ['http://', 'https://'],
-
-                'separator' => false
-
-            ],
-
             'hosts-file-phish' => [
 
                 'name' => 'https://hosts-file.net/?s=Browse&f=PSH',
