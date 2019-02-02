@@ -42,7 +42,7 @@ RUN a2enmod rewrite
 COPY . $APP_HOME
 
 # Copy environment file
-COPY .env $APP_HOME/.env
+COPY .env.example $APP_HOME/.env
 
 ADD php.ini /usr/local/etc/php
 
