@@ -35,21 +35,21 @@ class StartScanJob implements ShouldQueue
      */
     public function handle()
     {
-        $clientDomain = parse_url( $this->url, PHP_URL_HOST );
+        $clientDomain = parse_url($this->url, PHP_URL_HOST);
         $executionStartTime = microtime(true);
-        AuditsTrait::createLog('200 START SCAN - domain [' . $clientDomain . ']' , 'scanner');
+        AuditsTrait::createLog('200 START SCAN - domain [' . $clientDomain . ']', 'scanner');
         $resultsOfScanning = ScannsTrait::getScannerResults($clientDomain, config('app.scannerChecks'));
         $executionEndTime = microtime(true);
-        AuditsTrait::createLog('200 STOP SCAN - scanning domain [' . $clientDomain . '] took '. number_format((float)($executionEndTime - $executionStartTime), 4, ',', '') . ' seconds to execute.' , 'scanner');
+        AuditsTrait::createLog('200 STOP SCAN - scanning domain [' . $clientDomain . '] took ' . number_format((float)($executionEndTime - $executionStartTime), 4, ',', '') . ' seconds to execute.', 'scanner');
         // check the callbacks and return the scanning results
-        if(isset($resultsOfScanning['message']) && $resultsOfScanning['message'] == 'fail') {
+        if (isset($resultsOfScanning['message']) && $resultsOfScanning['message'] == 'fail') {
             $result = [
                 'name' => 'INI_S',
                 'hasError' => true,
                 'score' => 0,
                 'errorMessage' => [
                     'placeholder' => 'ERROR',
-                    'values' => (object) [
+                    'values' => (object)[
                         'Error: ' . $resultsOfScanning['exception']
                     ]
                 ],
@@ -61,15 +61,12 @@ class StartScanJob implements ShouldQueue
                 'name' => 'INI_S',
                 'hasError' => false,
                 'score' => ScannsTrait::calculateScannerScore($resultsOfScanning['collection']),
-                'errorMessage' => [
-                    'placeholder' => 'NO_ERRORS',
-                    'values' => (object) []
-                ],
+                'errorMessage' => null,
                 'tests' => $resultsOfScanning['collection']
             ];
         }
 
-        AuditsTrait::createLog('200 Send back to the callbackUrls the scanning results' , 'scanner');
-        ScannsTrait::notifyCallbacks( $this->callbackurls, 'success', $result );
+        AuditsTrait::createLog('200 Send back to the callbackUrls the scanning results', 'scanner');
+        ScannsTrait::notifyCallbacks($this->callbackurls, 'success', $result);
     }
 }
