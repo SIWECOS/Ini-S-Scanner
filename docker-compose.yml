@@ -1,8 +1,0 @@
-version: '2.1'
-
-services:
-  ini-s-scanner:
-    image: ini-s-scanner
-    build: .
-    ports:
-      - 80:80

@@ -1,57 +1,46 @@
-FROM php:7.1-apache
+FROM alpine:latest
 
-# Install packages
-RUN apt-get update && apt-get install -y \
-      libicu-dev \
-      libpq-dev \
-      libmcrypt-dev \
-      git \
-      zip \
-      unzip \
-      mysql-client \
-      zlib1g-dev \
-    && rm -r /var/lib/apt/lists/* \
-    && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
-    && docker-php-ext-install \
-      intl \
-      mbstring \
-      mcrypt \
-      pcntl \
-      pdo_mysql \
-      pdo_pgsql \
-      pgsql \
-      zip \
-      opcache
+RUN apk add --no-cache \
+    curl \
+    gcc \
+    libc-dev \
+    libressl-dev \
+    make \
+    openssl \
+    perl \
+    perl-dev \
+    wget \
+    zlib-dev \
+  && curl -L https://cpanmin.us \
+    | perl - -M https://cpan.metacpan.org \
+      -n DBI \
+      -n DBD::SQLite \
+      -n Mojolicious \
+      -n Minion \
+      -n Minion::Backend::SQLite \
+      -n App::Prove \
+      -n IO::Socket::SSL \
+      -n Net::IDN::Encode \
+      -n Text::CSV \
+      -n Storable \
+  && apk del \
+    zlib-dev \
+    wget \
+    perl-dev \
+    make \
+    libressl \
+    libc-dev \
+    gcc \
+    curl \
+  && rm -rf /root/.cpanm/* /usr/local/share/man/*
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+WORKDIR /home
 
-# Set our application folder as an environment variable
-ENV APP_HOME /var/www/html
+ADD blacklist_checker /home/
 
-# Change uid and gid of apache to docker user uid/gid
-RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+ENV PATH="/home/blacklist_checker/script:$PATH"
+ENV BLACKLIST="/home/storage/blacklists.sqlite"
 
-# Change the web_root to laravel /var/www/html/public folder
-RUN sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf
+EXPOSE 8080
 
-# Enable apache module rewrite
-RUN a2enmod rewrite
-
-# Copy source files
-COPY . $APP_HOME
-
-# Copy environment file
-COPY ./.env.example $APP_HOME/.env
-
-WORKDIR ${APP_HOME}
-
-RUN composer install
-
-# Change ownership of our applications
-RUN chown -R www-data:www-data $APP_HOME
-
-# Restart web server
-RUN service apache2 restart
-
-EXPOSE 80
+CMD [ "start" ]

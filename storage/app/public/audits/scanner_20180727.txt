@@ -1,6 +1,0 @@
-[127.0.0.1][07:30:56] 200 START SCAN - domain [test.info]
-[127.0.0.1][07:30:57] 200 No occurences in the blacklist [PHISHING] for the url [test.info]
-[127.0.0.1][07:30:57] 200 Found occurences in the blacklist [SPAM] for the url [test.info]
-[127.0.0.1][07:30:57] 200 No occurences in the blacklist [MALWARE] for the url [test.info]
-[127.0.0.1][07:30:57] 200 STOP SCAN - scanning domain [test.info] took 1,1830 seconds to execute.
-[127.0.0.1][07:30:57] 200 Send back to the callbackUrls the scanning results

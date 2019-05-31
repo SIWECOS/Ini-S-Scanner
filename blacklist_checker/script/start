@@ -1,0 +1,5 @@
+#!/bin/sh
+echo Start the server
+hypnotoad blacklist_checker/script/blacklist_checker
+echo Start the minions
+blacklist_checker minion worker

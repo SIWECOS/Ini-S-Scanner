@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  blacklistchecker:
+    build: .
+    env_file: .test.env
+    ports:
+    - "2019:8080"
+    volumes:
+    - type: bind
+      source: $PWD/blacklist_checker
+      target: /home/blacklist_checker
+    - type: bind
+      source: $PWD/storage
+      target: /home/storage
+    tty: true
