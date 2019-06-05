@@ -8,8 +8,8 @@ services:
     volumes:
     - type: bind
       source: $PWD/blacklist_checker
-      target: /home/blacklist_checker
+      target: /app/blacklist_checker
     - type: bind
       source: $PWD/storage
-      target: /home/storage
+      target: /storage
     tty: true

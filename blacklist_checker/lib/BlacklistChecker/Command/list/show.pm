@@ -24,17 +24,16 @@ sub run {
 }
 
 1;
-#b load /home/blacklist_checker/script/../lib/BlacklistChecker/Command/list/show.pm
 
 =encoding utf8
 
 =head1 NAME
 
-Blacklist::Checker::list::show
+BlacklistChecker::Command::list::show
 
 =head1 SYNOPSIS
 
-  Usage: APPLICATION show I<TARGET>
+  Usage: APPLICATION show
 
 =head1 DESCRIPTION
 

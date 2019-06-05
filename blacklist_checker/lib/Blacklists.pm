@@ -126,8 +126,10 @@ sub _initialize {
             next unless $blr;
             $self->{readers}{$list}= $blr;
             $self->{data}{$list}= {
-                updated => 0,
-                domains => {},
+                updated   => 0,
+                domains   => {},
+                kind      => $self->{readers}{$list}{config}{kind},
+                reference => $self->{readers}{$list}{config}{reference},
             };
         }
     }}
@@ -217,7 +219,7 @@ sub update {
         rename $self->{storage}.$$, $self->{storage}; 
     }
     $self->{listtypes}= $self->_listtypes;
-    return 1;
+    return $updated;
 }
 
 =head2 get_lists
@@ -338,7 +340,7 @@ sub _listtypes {
     my($self)= @_;
     my %listtypes;
     foreach my $bldata (values %{$self->{data}}) {
-        ++$listtypes{uc $bldata->{kind}};
+        ++$listtypes{uc ($bldata->{kind} || '')};
     }
     return [ sort keys %listtypes ];
 }

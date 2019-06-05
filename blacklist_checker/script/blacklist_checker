@@ -4,7 +4,10 @@ use strict;
 use warnings;
 
 use FindBin;
-BEGIN { unshift @INC, "$FindBin::Bin/../lib" }
+use Cwd qw( realpath );
+use File::Spec::Functions;
+use lib realpath( catdir( $FindBin::RealBin, updir, 'lib' ));
+
 use Mojolicious::Commands;
 
 # Start command line interface for application

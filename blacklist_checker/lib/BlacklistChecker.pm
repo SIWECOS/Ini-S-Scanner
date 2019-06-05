@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious';
 use Carp;
 use Blacklists;
 
-$ENV{SCANNER_NAME}= 'BLACKLISTS';
+$ENV{SCANNER_NAME}= 'INI_S'; # "INI_S" instead of "BLACKLISTS" to stay compatible to the previous version
 $ENV{VERSION}= "3.0.0";
 
 has blacklists => sub {
@@ -22,19 +22,28 @@ sub startup {
     my $self = shift;
 
     # Load configuration from hash returned by config file
-    my $config = $self->plugin('Config');
+    my $config = $self->plugin( Config => { file => $self->home . '/etc/blacklist_checker.conf' } );
 
     $self->log->handle(\*STDOUT);
 
-    # Configure the application
-    # $self->secrets($config->{secrets});
+     # initialize blacklists
+    croak "Config error: Missing blacklists"
+        unless 'HASH' eq ref $config->{blacklists};
+    $self->blacklists;
 
-    croak "Config error: Missing blacklists" unless 'HASH' eq ref $config->{blacklists};
-    $self->blacklists; # initialize blacklists
+    # Initialize Minion
+    croak "Config error: No storage defined for Minion" 
+        unless 'HASH' eq ref $config->{minion}
+        and defined $config->{minion}->{storage};
+    $self->plugin(Minion => {SQLite => $config->{minion}->{storage}});
 
-    $self->plugin(Minion => {SQLite => 'jobs.sqlite'});
-    ## $self->plugin('Minion::Admin');
+    if ( $config->{blacklists}->{interval} and $config->{blacklists}->{interval}=~ /^([1-9]\d*)$/ ) {
+        $ENV{UPDATE_INTERVAL}= $1;
+    }
+
+    # Prepare the minion jobs
     $self->plugin('BlacklistChecker::Jobs::CheckDomain');
+    $self->plugin('BlacklistChecker::Jobs::Update');
 
     # Router
     my $r = $self->routes;
@@ -43,7 +52,9 @@ sub startup {
     $r->post('/api/v1/check')->to('api#check');
     $r->get('/check/#domain')->to('api#direct_check');
 
+    ## # The part below can be used to observe the minions
     ## # Secure access to the admin ui with Basic authentication
+    ## $self->plugin('Minion::Admin');
     ## my $under = $self->routes->under('/minion' =>sub {
     ##   my $c = shift;
     ##   return 1 if $c->req->url->to_abs->userinfo eq 'Bender:rocks';
@@ -63,4 +74,4 @@ sub startup {
 
 1;
 
-# b load /home/blacklist_checker/script/../lib/BlacklistChecker.pm
+# b load /app/blacklist_checker/lib/BlacklistChecker.pm

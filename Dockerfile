@@ -1,13 +1,13 @@
 FROM alpine:latest
 
 RUN apk add --no-cache \
+    openssl \
+    perl \
     curl \
     gcc \
     libc-dev \
     libressl-dev \
     make \
-    openssl \
-    perl \
     perl-dev \
     wget \
     zlib-dev \
@@ -32,15 +32,12 @@ RUN apk add --no-cache \
     libc-dev \
     gcc \
     curl \
-  && rm -rf /root/.cpanm/* /usr/local/share/man/*
+  && rm -rf /root/.cpanm/* /usr/local/share/man
 
-WORKDIR /home
+COPY blacklist_checker/ /app/blacklist_checker/
 
-ADD blacklist_checker /home/
-
-ENV PATH="/home/blacklist_checker/script:$PATH"
-ENV BLACKLIST="/home/storage/blacklists.sqlite"
+RUN ln -s /app/blacklist_checker/script/blacklist_checker /usr/local/bin/blacklist
 
 EXPOSE 8080
 
-CMD [ "start" ]
+CMD [ "/app/blacklist_checker/script/start" ]
