@@ -1,7 +1,7 @@
 package SiwecosTestDetail;
 use strict;
 use warnings;
-use Mojo::JSON qw(to_json);
+use Mojo::JSON qw( to_json );
 
 sub new {
     my($class, $preset)= @_;
