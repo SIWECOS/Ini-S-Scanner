@@ -1,0 +1,32 @@
+language: generic
+
+dist: trusty
+
+script:
+  - docker build -t ini-s-scanner .
+
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: develop
+    script: >-
+      docker tag ini-s-scanner siwecos/ini-s-scanner:develop &&
+      docker push siwecos/ini-s-scanner:develop
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: master
+    script: >-
+      docker tag ini-s-scanner siwecos/ini-s-scanner:latest &&
+      docker push siwecos/ini-s-scanner:latest
+  - provider: script
+    skip_cleanup: true
+    on:
+      tags: true
+    script: >-
+      docker tag ini-s-scanner siwecos/ini-s-scanner:$TRAVIS_TAG &&
+      docker push siwecos/ini-s-scanner:$TRAVIS_TAG
