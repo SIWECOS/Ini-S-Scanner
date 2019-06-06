@@ -6,7 +6,7 @@ Initially this scanner was developed for [Initiative-S](https://www.initiative-s
 
 ## Startup using Docker
 
-`docker run -it --name siwecos-blacklist-scanner -p 2019:80 -v /PATH/TO/STORAGE:/storage siwecos/version-scanner`
+`docker run -it --name siwecos-blacklist-scanner -p 2019:80 -v /PATH/TO/STORAGE:/storage siwecos/ini-s-scanner`
 
 ### API-Call
 
