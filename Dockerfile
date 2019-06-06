@@ -36,8 +36,12 @@ RUN apk add --no-cache \
 
 COPY blacklist_checker/ /app/blacklist_checker/
 
-RUN ln -s /app/blacklist_checker/script/blacklist_checker /usr/local/bin/blacklist
+RUN ln -s /app/blacklist_checker/script/blacklist_checker /usr/local/bin/blacklist \
+  && mkdir /storage
 
-EXPOSE 8080
+ENV PHISHTANK_API=
+ENV MOJO_MODE=production
+
+EXPOSE 80
 
 CMD [ "/app/blacklist_checker/script/start" ]

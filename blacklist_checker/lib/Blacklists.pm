@@ -180,18 +180,28 @@ sub _initialize {
 
 sub update {
     my($self)= @_;
+    my $result= {
+        updated => [],
+        failed => [],
+        kept => [],
+        dropped => [],
+    };
     # remove all loaded blacklists (data) which are no longer configured
     while (my($blacklist_id, $bldata)= each %{$self->{data}}) {
         if (not exists $self->{readers}{$blacklist_id}) {
             delete $self->{data}{$blacklist_id};
+            push @{$result->{dropped}}, $blacklist_id;
         }
     }
     # prepare all blacklists configured but not yet loaded
     foreach my $configured_blacklist_name (keys %{$self->{readers}}) {
         next if exists $self->{data}{$configured_blacklist_name};
+        my $reader= $self->{readers}{$configured_blacklist_name};
         $self->{data}{$configured_blacklist_name}= {
             updated   => 0,
             domains   => {},
+            kind      => $reader->{config}{kind},
+            reference => $reader->{config}{reference},
         };
     }
     # Update/load all configured lists
@@ -201,8 +211,16 @@ sub update {
         next unless $reader;
         my $last_modified= $self->{data}{$blacklist_id}{updated};
         my $updated_list= $reader->fetch($last_modified);
-        carp "Could not update $blacklist_id" unless defined $updated_list;
-        next unless $updated_list;
+        if (not defined $updated_list) {
+            carp "Could not update $blacklist_id";
+            push @{$result->{failed}}, $blacklist_id;
+            next
+        }
+        if (not $updated_list) {
+            push @{$result->{kept}}, $blacklist_id;
+            next
+        }
+        push @{$result->{updated}}, $blacklist_id;
         ++$updated;
         my %domains;
         @domains{@{$updated_list->{domains}}}=();
@@ -219,7 +237,7 @@ sub update {
         rename $self->{storage}.$$, $self->{storage}; 
     }
     $self->{listtypes}= $self->_listtypes;
-    return $updated;
+    return $result;
 }
 
 =head2 get_lists

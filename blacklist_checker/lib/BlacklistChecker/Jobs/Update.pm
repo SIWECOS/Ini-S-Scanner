@@ -12,7 +12,7 @@ sub register {
 sub _update {
     my ($job) = @_;
     my $start= time;
-    my $interval= $ENV{UPDATE_INTERVAL} || 6*60*60;
+    my $interval= $ENV{UPDATE_INTERVAL} || 24 * 60 * 60; # one day
     $job->note(
         status   => 'updating',
         duration => '-',
@@ -27,7 +27,7 @@ sub _update {
         duration => $end - $start,
         updated  => $updated,
         time     => Mojo::Date->new( $end )->to_datetime,
-        next     => Mojo::Date->new( time + $interval )->to_datetime,
+        next     => Mojo::Date->new( $start + $interval )->to_datetime,
     );
     $job->retry( { delay => $interval } );
 }

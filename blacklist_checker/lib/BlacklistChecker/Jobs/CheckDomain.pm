@@ -19,7 +19,6 @@ sub _check_domain {
         my $ua  = $job->app->ua;
         $ua->max_redirects(3);
         my $result_string= $result->to_String();
-        $job->app->log->error($result_string);
         foreach my $cb (@$callbacks) {
             my $res = _checked_result( $job, $ua->post( $cb, { 'Content-Type' => 'application/json;charset=UTF-8' }, $result_string ) );
             ++$count;
