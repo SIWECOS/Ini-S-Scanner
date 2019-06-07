@@ -7,5 +7,5 @@
     blacklist list schedule
 } && {
     echo Start the minions
-    blacklist minion worker
+    blacklist jobqueue start
 }

@@ -4,6 +4,26 @@ This documentation describes the Blacklist scanner that has been developed as pa
 
 Initially this scanner was developed for [Initiative-S](https://www.initiative-s.de/). When Initiative-S was discontinued, the scanner was rewritten for Siwecos.
 
+The scanner regularly fetches known blacklists from the net.
+
+Every checked domain is matched against the blacklists and a report will be generated about each blacklist mentioning the domain.
+
+Depending on the kind of blacklist the score of the domain is reduced.
+
+Placklist kinds are:
+
+- PHISHING
+
+  The domain was reported to be used in Phishing attempts.
+
+- MALWARE
+
+  The domain was reported to contain or spread Malware.
+
+- SPAM
+
+  The domain was advertised in Spam mails.
+
 ## Startup using Docker
 
 `docker run -it --name siwecos-blacklist-scanner -p 2019:80 -v /PATH/TO/STORAGE:/storage siwecos/ini-s-scanner`
@@ -94,7 +114,11 @@ All tests and results are described in **texts.en.md** (english) and **text.de.m
 
 ## Configuration
 
-The configuration file is **/app/blacklist_checker/etc/blacklist_checker.conf**. It has 3 main sections:
+The configuration file is **/app/blacklist_checker/etc/blacklist_checker.conf**.
+
+Here you can configure whether or not the blacklists should be ket in memory. Set `preload => 0` to load the blacklists each time a domain is checked or, for improved speed at the cost of more memory, set `preload => 1` (the default).
+
+Additionally there are 3 configuration sections:
 
 ### blacklists
 

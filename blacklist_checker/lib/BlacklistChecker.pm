@@ -29,7 +29,6 @@ sub startup {
      # initialize blacklists
     croak "Config error: Missing blacklists"
         unless 'HASH' eq ref $config->{blacklists};
-    $self->blacklists;
 
     # Initialize Minion
     croak "Config error: No storage defined for Minion" 

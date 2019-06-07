@@ -2,6 +2,7 @@ version: '3.3'
 services:
   blacklistchecker:
     build: .
+    image: siwecos/ini-s-scanner:test
     env_file: .test.env
     ports:
     - "2019:8080"
@@ -13,3 +14,8 @@ services:
       source: $PWD/storage
       target: /storage
     tty: true
+
+# docker-compose -f dev.yaml up --build
+# ----
+# docker build -t siwecos/ini-s-scanner .
+# docker run --rm -it --name siwecos-blacklist-scanner -p 2019:8080 -v $PWD/storage:/storage siwecos/ini-s-scanner

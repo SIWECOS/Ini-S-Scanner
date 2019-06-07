@@ -382,6 +382,7 @@ sub _retrieve {
     return 0 if (exists $self->{data_read} and $relative_age >= $self->{data_read});
 
     # Load the newest list
+    # print "Loading from filesystem\n";
     my $loaded= retrieve($storage);
     if (not $loaded) {
         return "$storage couldn't be loaded.";
