@@ -7,7 +7,8 @@ has usage       => sub { shift->extract_usage };
 
 sub run {
   my ($self, @args) = @_;
-  if (not exists $self->app->{config}{preload} or $self->{config}{preload}) {
+  if (not exists $ENV{BLACKLIST_PRELOAD} or $ENV{BLACKLIST_PRELOAD}) {
+    # Preload blacklists into memory
     $self->app->blacklists;
   }
   my $worker= $self->app->minion->worker;

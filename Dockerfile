@@ -49,10 +49,17 @@ RUN  addgroup mojo \
 WORKDIR /home/mojo
 USER mojo
 
+# Run in production-mode (default: development)
+ENV MOJO_MODE=production
+
 # Please request an api token at https://data.phishtank.com/
 # if you plan to use regularly
 ENV PHISHTANK_API=
-ENV MOJO_MODE=production
+
+# keep blacklists in memory (default: 1)
+# or load each time a list is checked (0)
+# requires more ram but will increase speed
+ENV BLACKLIST_PRELOAD=1
 
 # We're using port 8080.
 # Check /app/blacklist_checker/etc/blacklist_checker.conf to configure another port

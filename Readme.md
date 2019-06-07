@@ -114,11 +114,7 @@ All tests and results are described in **texts.en.md** (english) and **text.de.m
 
 ## Configuration
 
-The configuration file is **/app/blacklist_checker/etc/blacklist_checker.conf**.
-
-Here you can configure whether or not the blacklists should be ket in memory. Set `preload => 0` to load the blacklists each time a domain is checked or, for improved speed at the cost of more memory, set `preload => 1` (the default).
-
-Additionally there are 3 configuration sections:
+The configuration file is **/app/blacklist_checker/etc/blacklist_checker.conf**. It has 3 main sections:
 
 ### blacklists
 
@@ -131,6 +127,24 @@ The included webserver is [Mojolicious' hypnotoad](https://mojolicious.org/perld
 ### minion
 
 [Minion](https://mojolicious.org/perldoc/Minion) is the job queue used. It requires the location where to store its SQLite database for persisting its job data.
+
+## Environment
+
+These environment variables are used:
+
+- MOJO_MODE
+
+  Defines in which mode to run the application `production` or `development`(default).
+
+- PHISHTANK_API
+
+  It is advised to register an API key for the [Phishtank](https://data.phishtank.com/) blacklist and to set the key using this variable.
+
+- BLACKLIST_PRELOAD
+
+  If present and set to 0, the blacklists will only be loaded in memory when required - when checking a domain or updating the lists.
+
+  Otherwise the blacklists will be kept in memory in order to gain some speed at the cost of a higher memory consumption.
 
 ## Commands
 
