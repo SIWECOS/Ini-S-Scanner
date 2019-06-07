@@ -10,7 +10,7 @@ Every checked domain is matched against the blacklists and a report will be gene
 
 Depending on the kind of blacklist the score of the domain is reduced.
 
-Placklist kinds are:
+Current kinds of Blacklists are:
 
 - PHISHING
 
@@ -26,7 +26,7 @@ Placklist kinds are:
 
 ## Startup using Docker
 
-`docker run -it --name siwecos-blacklist-scanner -p 2019:80 -v /PATH/TO/STORAGE:/storage siwecos/ini-s-scanner`
+`docker run -it --name siwecos-blacklist-scanner -p 2019:8080 -v /PATH/TO/STORAGE:/storage siwecos/ini-s-scanner`
 
 ### API-Call
 
