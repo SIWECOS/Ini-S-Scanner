@@ -23,14 +23,22 @@ sub run {
       exit;
   }
   my $updateinfo= $notes->{updated};
-  my $width= (sort {$b<=>$a} map length, map @$_, values %$updateinfo)[0];
-  my $blacklists= $self->app->blacklists->get_lists;
-  foreach my $status (qw(dropped failed kept updated )) {
-    next unless @{$updateinfo->{$status}};
-    printf "Lists %-7s: %d\n", $status, scalar @{$updateinfo->{$status}};
-    foreach (sort @{$updateinfo->{$status}}) {
-        printf "      %-${width}s (%s)\n", $_, Mojo::Date->new($blacklists->{$_}{updated})->to_datetime;
+  my $width= 0;
+  if (ref $updateinfo) {
+    $width= (sort {$b<=>$a} map length, map @$_, values %$updateinfo)[0];
+    my $blacklists= $self->app->blacklists->get_lists;
+    foreach my $status (qw(dropped failed kept updated )) {
+      next unless @{$updateinfo->{$status}};
+      printf "Lists %-7s: %d\n", $status, scalar @{$updateinfo->{$status}};
+      if (ref $updateinfo->{$status}) {
+        foreach (sort @{$updateinfo->{$status}}) {
+            printf "      %-${width}s (%s)\n", $_, Mojo::Date->new($blacklists->{$_}{updated})->to_datetime;
+        }
+      }
     }
+  } else {
+    print "Status       : ",$updatetasks->{jobs}[0]{state},"\n";
+    print "               ",$updatetasks->{jobs}[0]{result},"\n" if $updatetasks->{jobs}[0]{state} eq 'failed';
   }
 }
 

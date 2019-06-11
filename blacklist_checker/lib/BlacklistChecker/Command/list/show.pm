@@ -15,7 +15,7 @@ sub run {
         print "  Reference: ",$lists->{$_}{reference},"\n";
         print "  Kind     : ",$lists->{$_}{kind},"\n";
         print "  Updated  : ",Mojo::Date->new($lists->{$_}{updated})->to_datetime(),"\n";
-        print "  Entries  : ",scalar keys %{$lists->{$_}{domains}},"\n";
+        print "  Entries  : ",$lists->{$_}{entries},"\n";
       } else {
         print "  no data\n"
       }

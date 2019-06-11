@@ -50,6 +50,7 @@ use warnings;
 use File::Basename;
 use Carp;
 use BlacklistReader;
+use BtreeFile;
 use SiwecosResult;
 use SiwecosTest;
 use SiwecosTestDetail;
@@ -59,6 +60,8 @@ use Mojo::JSON;
 use Net::IDN::Encode qw(:all);
 
 use Storable qw( nstore retrieve );
+
+my $INDEXFILE= '.index';
 
 =head2 new
 
@@ -73,9 +76,13 @@ The following attributes are available:
 
 =item storage
 
-Defines a path to the file, where the Blacklists' data is stored.
+Defines a path to the directory, where the Blacklists' data is stored.
 
-my $bls = Blacklists->new ({ storage => '/path/to/blacklists.data', ... });
+my $bls = Blacklists->new ({ storage => '/path/to/blacklists', ... });
+
+Each blacklist will be stored in this directory under its name.
+
+An index file (".index") will be stored as well. 
 
 =item lists
 
@@ -127,7 +134,7 @@ sub _initialize {
             $self->{readers}{$list}= $blr;
             $self->{data}{$list}= {
                 updated   => 0,
-                domains   => {},
+                btree     => undef,
                 kind      => $self->{readers}{$list}{config}{kind},
                 reference => $self->{readers}{$list}{config}{reference},
             };
@@ -157,10 +164,12 @@ sub _initialize {
         }
     }}
     my $storage= $self->{storage};
+    my $index= undef;
     PREPARE_STORAGE:{ if ($storage) {
-        if (not -r $storage) {
-            if (not nstore($self->{data}, $storage)) {
-                $error.= "Couldn't create $storage.\n";
+        $index= $self->{index}= "$storage/$INDEXFILE";
+        if (not -r $index) {
+            if (not nstore($self->{data}, $index)) {
+                $error.= "Couldn't create $index.\n";
             }
             last PREPARE_STORAGE;
         }
@@ -199,9 +208,10 @@ sub update {
         my $reader= $self->{readers}{$configured_blacklist_name};
         $self->{data}{$configured_blacklist_name}= {
             updated   => 0,
-            domains   => {},
+            btree     => undef,
             kind      => $reader->{config}{kind},
             reference => $reader->{config}{reference},
+            entries   => 0,
         };
     }
     # Update/load all configured lists
@@ -214,27 +224,29 @@ sub update {
         if (not defined $updated_list) {
             carp "Could not update $blacklist_id";
             push @{$result->{failed}}, $blacklist_id;
-            next
+            next;
         }
         if (not $updated_list) {
             push @{$result->{kept}}, $blacklist_id;
-            next
+            next;
         }
         push @{$result->{updated}}, $blacklist_id;
         ++$updated;
-        my %domains;
-        @domains{@{$updated_list->{domains}}}=();
+
+        my @reverse_domains= sort map {scalar reverse} @{$updated_list->{domains}};
+        my $btree= BtreeFile->new( $self->{storage} . '/' . $blacklist_id, \@reverse_domains);
         $self->{data}{$blacklist_id}= {
             updated   => $updated_list->{updated},
-            domains   => \%domains,
+            btree     => $btree,
             kind      => $reader->{config}{kind},
             reference => $reader->{config}{reference},
+            entries   => scalar @reverse_domains,
         }
     }
     # If anything was updated, store as temporary file
-    if ($updated and nstore($self->{data}, $self->{storage}.$$)) {
+    if ($updated and nstore($self->{data}, $self->{index}.$$)) {
         # when stored overwrite existing file
-        rename $self->{storage}.$$, $self->{storage}; 
+        rename $self->{index}.$$, $self->{index}; 
     }
     $self->{listtypes}= $self->_listtypes;
     return $result;
@@ -271,17 +283,11 @@ sub domain_check {
     # clean domain
     for ($domain) {
         $_= lc $_;
-        s#^https?://##;
+        s#^https?://(?:www\.)?##;
         s#[:/].*$##;
     }
-    # find the alternativ (toggle "www")
-    my $alternative= $domain;
-    if (not $alternative=~ s/^www\.//) {
-        $alternative= "www.$domain";
-    }
-    # check domain and www.domain
+    # check domain
     my $matches= $self->_checkmatch($domain);
-    my $alternative_match= $self->_checkmatch($alternative);
 
     # Each listtype (i.e. kind of backlist) becomes a new test
     foreach my $kind (@{$self->{listtypes}}) {
@@ -306,16 +312,8 @@ sub domain_check {
 
         # Remember whether we got testdetails
         my $new_details;
-        # Get the results for the original domain
+        # Get the results for the domain
         my $result= $matches->{$kind};
-        if ($result) {
-            $new_details||= 1;
-            foreach my $listname (sort keys %{$result}) {
-                $test->add_testDetails($result->{$listname});
-            }
-        }
-        # Get the results for the alternative domain
-        $result= $alternative_match->{$kind};
         if ($result) {
             $new_details||= 1;
             foreach my $listname (sort keys %{$result}) {
@@ -340,7 +338,8 @@ sub _checkmatch {
     my($self, $domain)= @_;
     my %tests;
     while (my($list, $bldata)= each %{$self->{data}}) {
-        next unless exists $bldata->{domains}{$domain};
+        next unless ref $bldata->{btree};
+        next unless $bldata->{btree}->reverse_domain_match($domain);
         # Store the information as a SiwecosTestDetail
         $tests{uc $bldata->{kind}}{$list}= SiwecosTestDetail->new({
             translationStringId => 'DOMAIN_FOUND',
@@ -370,10 +369,10 @@ sub _listtypes {
 # "error/warning message"
 sub _retrieve {
     my($self)= @_;
-    my $storage= $self->{storage};
+    my $index= $self->{index};
 
     # Do we have a file with data?
-    return "No such file: $storage" unless -r $storage;
+    return "No such file: $index" unless -r $index;
 
     # get its age (relative to script start time)
     my $relative_age= -M _;
@@ -383,13 +382,13 @@ sub _retrieve {
 
     # Load the newest list
     # print "Loading from filesystem\n";
-    my $loaded= retrieve($storage);
+    my $loaded= retrieve($index);
     if (not $loaded) {
-        return "$storage couldn't be loaded.";
+        return "$index couldn't be loaded.";
     }
     if (ref $loaded ne 'HASH') {
-        return "$storage is of type ".ref($loaded)." but must be a HASH\n"
-            ."Ignoring $storage.";
+        return "$index is of type ".ref($loaded)." but must be a HASH\n"
+            ."Ignoring $index.";
     }
     $self->{data}= $loaded;
     $self->{data_read}= $relative_age;
