@@ -140,12 +140,6 @@ These environment variables are used:
 
   It is advised to register an API key for the [Phishtank](https://data.phishtank.com/) blacklist and to set the key using this variable.
 
-- BLACKLIST_PRELOAD
-
-  If present and set to 0, the blacklists will only be loaded in memory when required - when checking a domain or updating the lists.
-
-  Otherwise the blacklists will be kept in memory in order to gain some speed at the cost of a higher memory consumption.
-
 ## Commands
 
 ### Startup

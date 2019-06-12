@@ -7,10 +7,8 @@ has usage       => sub { shift->extract_usage };
 
 sub run {
   my ($self, @args) = @_;
-  if (not exists $ENV{BLACKLIST_PRELOAD} or $ENV{BLACKLIST_PRELOAD}) {
-    # Preload blacklists into memory
-    $self->app->blacklists;
-  }
+  # initialize blacklists
+  $self->app->blacklists;
   my $worker= $self->app->minion->worker;
   my $log = $self->app->log;
   $log->info("Worker $$ started");

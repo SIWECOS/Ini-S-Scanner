@@ -39,8 +39,9 @@ RUN  apk add --no-cache \
 COPY blacklist_checker/ /app/blacklist_checker/
 
 # Create convenience link and create storage folder
+# Check /app/blacklist_checker/etc/blacklist_checker.conf to configure another storage folder 
 RUN  ln -s /app/blacklist_checker/script/blacklist_checker /usr/local/bin/blacklist \
-  && mkdir /storage
+  && mkdir -p /storage/blacklists
 
 # Do not run as root but as user "mojo"
 RUN  addgroup mojo \
@@ -53,13 +54,8 @@ USER mojo
 ENV MOJO_MODE=production
 
 # Please request an api token at https://data.phishtank.com/
-# if you plan to use regularly
+# if you plan to use Phishtank regularly
 ENV PHISHTANK_API=
-
-# keep blacklists in memory (default: 1)
-# or load each time a list is checked (0)
-# requires more ram but will increase speed
-ENV BLACKLIST_PRELOAD=1
 
 # We're using port 8080.
 # Check /app/blacklist_checker/etc/blacklist_checker.conf to configure another port
