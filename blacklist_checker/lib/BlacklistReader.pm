@@ -276,7 +276,11 @@ sub _split {
 
 sub _checked_result {
     my($http)= @_;
-    my $res= $http->result;
+    if (my $err= $http->error) {
+        carp $err->{code}." response: ".$err->{message};
+        return undef;
+    }
+    my $res= eval { $http->result };
     if (not $res->is_success) {
         if ($res->is_error)    {
             carp "Failed to download ".$http->req->url."\n\t".$res->message."\n";

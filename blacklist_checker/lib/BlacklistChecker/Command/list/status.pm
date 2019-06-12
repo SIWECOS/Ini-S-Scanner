@@ -18,6 +18,7 @@ sub run {
   print "Last update  : ",$notes->{time},"\n";
   print "Next update  : ",$notes->{next},"\n";
   print "Duration     : ",$notes->{duration}," sec\n";
+  print "Currently    : ",$notes->{status},"\n";
   if ($notes->{status} eq "running") {
       print "\nUpdate is in progress.\n";
       exit;

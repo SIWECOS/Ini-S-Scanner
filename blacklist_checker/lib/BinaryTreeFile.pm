@@ -75,15 +75,20 @@ Errormessage will be carp-ed.
 
 sub save {
     my($self, $sorted_array)= @_;
-    open my $bintree_file, ">", $self->{filename}
+    open my $bintree_file, ">", $self->{filename}.$$
         or do {
-            carp "Cannot create ".$self->{filename}.": $!";
+            carp "Cannot create ".$self->{filename}."$$: $!";
             return undef;
         };
     print $bintree_file scalar @$sorted_array,"\n";
     print $bintree_file _bintree($sorted_array, 0, $#$sorted_array);
     close $bintree_file;
-    return 1;
+    rename $self->{filename}.$$, $self->{filename}.$$
+         or do {
+            carp "Failed to rename ".$self->{filename}."$$ to ".$self->{filename}.": $!";
+            return undef;
+        };
+   return 1;
 }
 
 =head2 reverse_domain_match

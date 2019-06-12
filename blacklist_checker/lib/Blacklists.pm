@@ -9,7 +9,7 @@ Blacklists
 
     use Blacklists;
 
-    # Initialize the Blacklists
+Initialize the Blacklists
     my $bls= Blacklists->new( {
         storage  => '/path/to/storage',
         lists    => { list config },
@@ -17,21 +17,9 @@ Blacklists
       }
     ) 
 
-    # Check a domain
+Check a domain
     my $res= $bls->check_domain( $domain );
-    # Returns a hash in SIWECOS-Result-Format 
-    
-    # get information
-    my $bl= $bls->blacklistfile( $id );
-
-    my $order= $blfs->listorder;
-    # @$order is an unsorted list of all blacklistfile IDs
-    
-    my $last_read= $blfs->last_read;
-    # epoch time of last time files were read from filesystem
-
-    my $last_fetch= $blfs->last_fetch;
-    # epoch time of the youngest blacklistfile
+Returns a hash in SIWECOS-Result-Format 
 
 =head1 DESCRIPTION
 
@@ -186,6 +174,12 @@ sub _initialize {
     return $self;
 }
 
+=head2 update
+
+Update the blacklists and return an result hash listing all blacklists
+which were updated, kept, dropped or failed to load.
+
+=cut
 
 sub update {
     my($self)= @_;
@@ -216,6 +210,7 @@ sub update {
     }
     # Update/load all configured lists
     my $updated= 0;
+    my $failed= 0;
     foreach my $blacklist_id (keys %{$self->{data}}) {
         my $reader= $self->{readers}{$blacklist_id};
         next unless $reader;
@@ -224,6 +219,7 @@ sub update {
         if (not defined $updated_list) {
             carp "Could not update $blacklist_id";
             push @{$result->{failed}}, $blacklist_id;
+            ++$failed;
             next;
         }
         if (not $updated_list) {
@@ -395,4 +391,4 @@ sub _retrieve {
     return 1;
 }
 1;
-# b load /home/blacklist_checker/script/../lib/Blacklists.pm
+# b load /app/blacklist_checker/lib/Blacklists.pm
