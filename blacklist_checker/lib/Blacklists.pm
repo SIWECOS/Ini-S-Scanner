@@ -50,7 +50,7 @@ use warnings;
 use File::Basename;
 use Carp;
 use BlacklistReader;
-use BtreeFile;
+use BinaryTreeFile;
 use SiwecosResult;
 use SiwecosTest;
 use SiwecosTestDetail;
@@ -134,7 +134,7 @@ sub _initialize {
             $self->{readers}{$list}= $blr;
             $self->{data}{$list}= {
                 updated   => 0,
-                btree     => undef,
+                bintree   => undef,
                 kind      => $self->{readers}{$list}{config}{kind},
                 reference => $self->{readers}{$list}{config}{reference},
             };
@@ -208,7 +208,7 @@ sub update {
         my $reader= $self->{readers}{$configured_blacklist_name};
         $self->{data}{$configured_blacklist_name}= {
             updated   => 0,
-            btree     => undef,
+            bintree   => undef,
             kind      => $reader->{config}{kind},
             reference => $reader->{config}{reference},
             entries   => 0,
@@ -234,10 +234,10 @@ sub update {
         ++$updated;
 
         my @reverse_domains= sort map {scalar reverse} @{$updated_list->{domains}};
-        my $btree= BtreeFile->new( $self->{storage} . '/' . $blacklist_id, \@reverse_domains);
+        my $bintree= BinaryTreeFile->new( $self->{storage} . '/' . $blacklist_id, \@reverse_domains);
         $self->{data}{$blacklist_id}= {
             updated   => $updated_list->{updated},
-            btree     => $btree,
+            bintree   => $bintree,
             kind      => $reader->{config}{kind},
             reference => $reader->{config}{reference},
             entries   => scalar @reverse_domains,
@@ -338,8 +338,8 @@ sub _checkmatch {
     my($self, $domain)= @_;
     my %tests;
     while (my($list, $bldata)= each %{$self->{data}}) {
-        next unless ref $bldata->{btree};
-        next unless $bldata->{btree}->reverse_domain_match($domain);
+        next unless ref $bldata->{bintree};
+        next unless $bldata->{bintree}->reverse_domain_match($domain);
         # Store the information as a SiwecosTestDetail
         $tests{uc $bldata->{kind}}{$list}= SiwecosTestDetail->new({
             translationStringId => 'DOMAIN_FOUND',

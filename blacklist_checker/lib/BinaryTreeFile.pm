@@ -1,4 +1,4 @@
-package BtreeFile;
+package BinaryTreeFile;
 
 use strict;
 use warnings;
@@ -19,11 +19,11 @@ sub new {
 
 sub save {
     my($self, $sorted_array)= @_;
-    open my $btree_file, ">", $self->{filename}
+    open my $bintree_file, ">", $self->{filename}
         or croak "Cannot create ".$self->{filename}.": $!";
-    print $btree_file scalar @$sorted_array,"\n";
-    print $btree_file _btree($sorted_array, 0, $#$sorted_array);
-    close $btree_file;
+    print $bintree_file scalar @$sorted_array,"\n";
+    print $bintree_file _bintree($sorted_array, 0, $#$sorted_array);
+    close $bintree_file;
 }
 
 sub reverse_domain_match {
@@ -31,18 +31,18 @@ sub reverse_domain_match {
     my $length= length($domain);
     my $search_for= scalar reverse $domain;
     my $found= "";
-    open my $btree_file, '<', $self->{filename}
+    open my $bintree_file, '<', $self->{filename}
         or croak "Cannot read ".$self->{filename}.": $!";
-    my $entries= <$btree_file>;
-    while (my $e= <$btree_file>) {
+    my $entries= <$bintree_file>;
+    while (my $e= <$bintree_file>) {
         chomp $e;
         last unless $e;
-        my $offset= <$btree_file>;
+        my $offset= <$bintree_file>;
         my $cmp= $search_for cmp substr($e, 0, $length);
         next if $cmp < 0;
         if ($cmp) {
             last unless 1*$offset;
-            seek $btree_file, $offset, 1;
+            seek $bintree_file, $offset, 1;
             next;
         }
         # It's only a match if the entry matched complete
@@ -53,17 +53,17 @@ sub reverse_domain_match {
         $found= $e;
         last;
     }
-    close $btree_file;
+    close $bintree_file;
     return scalar reverse $found;
 }
 
 
-sub _btree {
+sub _bintree {
     my($arr, $l, $r)= @_;  # array, left and right border
     return "" if $l > $r;  # done if out of array
     my $m= ($r+$l+1) >> 1; # get middle entry
-    my $smaller= _btree($arr, $l, $m-1); # btree of smaller entries
-    my $bigger=  _btree($arr, $m+1, $r); # btree of bigger entries
+    my $smaller= _bintree($arr, $l, $m-1); # bintree of smaller entries
+    my $bigger=  _bintree($arr, $m+1, $r); # bintree of bigger entries
     if (not $smaller) {   # No entries smaller
         $smaller= "\n";   # will become an empty line
     }
