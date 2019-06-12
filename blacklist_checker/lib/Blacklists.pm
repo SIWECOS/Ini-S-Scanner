@@ -10,7 +10,7 @@ Blacklists
     use Blacklists;
 
     # Initialize the Blacklists
-    my %bls= Blacklists->new( {
+    my $bls= Blacklists->new( {
         storage  => '/path/to/storage',
         lists    => { list config },
         severity => { severity config },
