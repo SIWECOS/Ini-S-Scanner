@@ -2,8 +2,13 @@ language: generic
 
 dist: trusty
 
-script:
+install:
   - docker build -t ini-s-scanner .
+  - docker run -d -p 8080:8080 --name=ini-s-scanner ini-s-scanner
+
+script:
+  - sleep 30s
+  - docker ps | grep -i ini-s-scanner
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
