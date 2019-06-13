@@ -277,7 +277,7 @@ sub _split {
 sub _checked_result {
     my($http)= @_;
     if (my $err= $http->error) {
-        carp $err->{code}." response: ".$err->{message};
+        carp(($err->{code} || "?")." response: ".($err->{message} || "no message"));
         return undef;
     }
     my $res= eval { $http->result };
@@ -394,4 +394,4 @@ A regular expression which must capture in $1 the data to use.
 
 =back
 
-# b load /home/blacklist_checker/script/../lib/BlacklistReader.pm
+# b load /app/blacklist_checker/lib/BlacklistReader.pm

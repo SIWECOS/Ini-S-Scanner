@@ -83,7 +83,7 @@ sub save {
     print $bintree_file scalar @$sorted_array,"\n";
     print $bintree_file _bintree($sorted_array, 0, $#$sorted_array);
     close $bintree_file;
-    rename $self->{filename}.$$, $self->{filename}.$$
+    rename($self->{filename}.$$, $self->{filename})
          or do {
             carp "Failed to rename ".$self->{filename}."$$ to ".$self->{filename}.": $!";
             return undef;
@@ -208,3 +208,5 @@ sub _bintree {
 }
 
 1;
+
+# b load /app/blacklist_checker/lib/BinaryTreeFile.pm
