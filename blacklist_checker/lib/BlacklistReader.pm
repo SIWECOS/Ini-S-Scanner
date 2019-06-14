@@ -5,6 +5,7 @@ use warnings;
 use Carp;
 use Net::IDN::Encode qw(domain_to_ascii);
 use Text::CSV;
+use Mojo::Date;
 use URI;
 
 sub new {

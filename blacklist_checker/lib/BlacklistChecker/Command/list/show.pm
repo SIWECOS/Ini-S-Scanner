@@ -11,11 +11,15 @@ sub run {
     my $lists= $self->app->blacklists->get_lists;
     foreach (sort keys %$lists) {
       print "$_:\n";
+      my $bintree= $lists->{$_}{bintree};
+      my $filename= $bintree && $bintree->filename;
       if ($lists->{$_}{updated}) {
         print "  Reference: ",$lists->{$_}{reference},"\n";
         print "  Kind     : ",$lists->{$_}{kind},"\n";
         print "  Updated  : ",Mojo::Date->new($lists->{$_}{updated})->to_datetime(),"\n";
+        print "  Status   : ",$lists->{$_}{status},"\n";
         print "  Entries  : ",$lists->{$_}{entries},"\n";
+        print "  File     : ",$filename,( -r $filename ? "\n" : " (file not found)\n");
       } else {
         print "  no data\n"
       }

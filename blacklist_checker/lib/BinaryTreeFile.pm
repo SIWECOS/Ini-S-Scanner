@@ -91,6 +91,17 @@ sub save {
    return 1;
 }
 
+=head2 filename
+
+Return the filename.
+
+=cut
+
+sub filename {
+    my($self)= @_;
+   return $self->{filename};
+}
+
 =head2 reverse_domain_match
 
 Saves a sorted array in a BinaryTreeFile.

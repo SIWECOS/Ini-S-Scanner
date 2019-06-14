@@ -183,17 +183,12 @@ which were updated, kept, dropped or failed to load.
 
 sub update {
     my($self)= @_;
-    my $result= {
-        updated => [],
-        failed => [],
-        kept => [],
-        dropped => [],
-    };
+    my @dropped = ();
     # remove all loaded blacklists (data) which are no longer configured
     while (my($blacklist_id, $bldata)= each %{$self->{data}}) {
         if (not exists $self->{readers}{$blacklist_id}) {
             delete $self->{data}{$blacklist_id};
-            push @{$result->{dropped}}, $blacklist_id;
+            push @dropped, $blacklist_id;
         }
     }
     # prepare all blacklists configured but not yet loaded
@@ -206,46 +201,67 @@ sub update {
             kind      => $reader->{config}{kind},
             reference => $reader->{config}{reference},
             entries   => 0,
+            status    => 'new',
         };
     }
     # Update/load all configured lists
     my $updated= 0;
     my $failed= 0;
+    my $kept= 0;
     foreach my $blacklist_id (keys %{$self->{data}}) {
+        my $bintree_file= $self->{storage} . '/' . $blacklist_id;
         my $reader= $self->{readers}{$blacklist_id};
         next unless $reader;
         my $last_modified= $self->{data}{$blacklist_id}{updated};
+        # if the file is missing we load regardless
+        $last_modified= 0 if not -r $bintree_file;
         my $updated_list= $reader->fetch($last_modified);
         if (not defined $updated_list) {
             carp "Could not update $blacklist_id";
-            push @{$result->{failed}}, $blacklist_id;
+            $self->{data}{$blacklist_id}{status}= 'failed';
             ++$failed;
             next;
         }
         if (not $updated_list) {
-            push @{$result->{kept}}, $blacklist_id;
+            $self->{data}{$blacklist_id}{status}= 'kept';
+            ++$kept;
             next;
         }
-        push @{$result->{updated}}, $blacklist_id;
         ++$updated;
 
         my @reverse_domains= sort map {scalar reverse} @{$updated_list->{domains}};
-        my $bintree= BinaryTreeFile->new( $self->{storage} . '/' . $blacklist_id, \@reverse_domains);
-        $self->{data}{$blacklist_id}= {
-            updated   => $updated_list->{updated},
-            bintree   => $bintree,
-            kind      => $reader->{config}{kind},
-            reference => $reader->{config}{reference},
-            entries   => scalar @reverse_domains,
+        my $bintree= BinaryTreeFile->new( $bintree_file, \@reverse_domains);
+        if ($bintree) {
+            $self->{data}{$blacklist_id}= {
+                updated   => $updated_list->{updated},
+                bintree   => $bintree,
+                kind      => $reader->{config}{kind},
+                reference => $reader->{config}{reference},
+                entries   => scalar @reverse_domains,
+                status    => 'updated',
+            }
+        } else {
+            $self->{data}{$blacklist_id}{status}= 'save_error';
         }
     }
     # If anything was updated, store as temporary file
-    if ($updated and nstore($self->{data}, $self->{index}.$$)) {
-        # when stored overwrite existing file
-        rename $self->{index}.$$, $self->{index}; 
+    if ($updated) {
+        if (nstore($self->{data}, $self->{index}.$$)) {
+            # when stored overwrite existing file
+            if (not rename $self->{index}.$$, $self->{index}) {
+                carp "Failed to save index file ".$self->{index};
+            } 
+        } else {
+            carp "Failed to save temporary index file ".$self->{index}.$$;
+        }
     }
     $self->{listtypes}= $self->_listtypes;
-    return $result;
+    return {
+        updates => $updated,
+        fails   => $failed,
+        kept    => $kept,
+        dropped => \@dropped,
+    };
 }
 
 =head2 get_lists
@@ -257,6 +273,39 @@ Will return a reference to all blacklists
 sub get_lists {
     my($self)= @_;
     return $self->{data};
+}
+
+=head2 status_string
+
+Will return the current status of the blacklists
+
+=cut
+
+sub status_string {
+    my($self)= @_;
+    my $width= 0;
+    my %liststatus;
+    while (my($id, $info)= each %{$self->{data}}) {
+        my $w= length $id;
+        $width= $w if $w > $width;
+        ++$liststatus{$info->{status} || 'missing' }{$id};
+    }
+    foreach (values %liststatus) {
+        $_= [ sort keys %$_ ];
+    }
+    my $output= '';
+    foreach my $status (qw( save_error failed kept updated )) {
+        next unless $liststatus{$status};
+        $output.= "Lists $status:\n";
+        foreach my $id (@{$liststatus{$status}}) {
+            my $file_missing= -r $self->{data}{$id}{bintree}->filename ? '' : ' file not found'; 
+            $output.= sprintf "    %-${width}s (%s)%s\n",
+                $id,
+                Mojo::Date->new($self->{data}{$id}{updated})->to_datetime,
+                $file_missing;
+        }
+    }
+    return $output;
 }
 
 =head2 domain_check( $domain )

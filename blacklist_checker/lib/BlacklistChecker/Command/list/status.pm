@@ -2,7 +2,7 @@ package BlacklistChecker::Command::list::status;
 use Mojo::Base 'Mojolicious::Command';
 use Mojo::Date;
 
-has description => 'Update blacklists';
+has description => 'Show blacklist update status';
 has usage       => sub { shift->extract_usage };
 
 sub run {
@@ -10,37 +10,27 @@ sub run {
   my $updatetasks= $self->app->minion->backend->list_jobs(
     0, 1, { tasks => [qw[update]]}
   );
+  my $notes;
   if ( $updatetasks->{total} < 1 ) {
     print "There is no update job. Try to schedule one.\n";
-    exit 1;
-  }
-  my $notes= $updatetasks->{jobs}[0]{notes};
-  print "Last update  : ",$notes->{time},"\n";
-  print "Next update  : ",$notes->{next},"\n";
-  print "Duration     : ",$notes->{duration}," sec\n";
-  print "Currently    : ",$notes->{status},"\n";
-  if ($notes->{status} eq "running") {
-      print "\nUpdate is in progress.\n";
-      exit;
-  }
-  my $updateinfo= $notes->{updated};
-  my $width= 0;
-  if (ref $updateinfo) {
-    $width= (sort {$b<=>$a} map length, map @$_, values %$updateinfo)[0];
-    my $blacklists= $self->app->blacklists->get_lists;
-    foreach my $status (qw(dropped failed kept updated )) {
-      next unless @{$updateinfo->{$status}};
-      printf "Lists %-7s: %d\n", $status, scalar @{$updateinfo->{$status}};
-      if (ref $updateinfo->{$status}) {
-        foreach (sort @{$updateinfo->{$status}}) {
-            printf "      %-${width}s (%s)\n", $_, Mojo::Date->new($blacklists->{$_}{updated})->to_datetime;
-        }
-      }
-    }
   } else {
-    print "Status       : ",$updatetasks->{jobs}[0]{state},"\n";
-    print "               ",$updatetasks->{jobs}[0]{result},"\n" if $updatetasks->{jobs}[0]{state} eq 'failed';
+    $notes= $updatetasks->{jobs}[0]{notes};
+    print "Last update  : ",$notes->{time},"\n";
+    print "Next update  : ",$notes->{next},"\n";
+    print "Duration     : ",$notes->{duration}," sec\n";
+    print "Currently    : ",$notes->{status},"\n";
+    if ($notes->{status} eq "running") {
+        print "\nUpdate is in progress.\n";
+        exit;
+    }
+    if ($updatetasks->{jobs}[0]{state} eq 'failed') {
+      print "Status       : ",$updatetasks->{jobs}[0]{state},"\n";
+      print "               ",$updatetasks->{jobs}[0]{result},"\n";
+    }
   }
+  my $status= $self->app->blacklists->status_string;
+  print $status;
+  exit 1 unless $status;
 }
 
 1;
