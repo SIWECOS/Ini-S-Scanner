@@ -2,7 +2,8 @@
 
 This documentation describes the Blacklist scanner that has been developed as part of SIWECOS.
 
-Initially this scanner was developed for [Initiative-S](https://www.initiative-s.de/). When Initiative-S was discontinued, the scanner was rewritten for Siwecos.
+Initially this scanner was developed for [Initiative-S](https://www.initiative-s.de/).
+When Initiative-S was discontinued, the scanner was rewritten for Siwecos.
 
 The scanner regularly fetches known blacklists from the net.
 
@@ -118,15 +119,18 @@ The configuration file is **/app/blacklist_checker/etc/blacklist_checker.conf**.
 
 ### blacklists
 
-Blacklists are loaded from several sources. Please refer to the inline documentation given in the configuration file to see how to configure them.
+Blacklists are loaded from several sources.
+Please refer to the inline documentation given in the configuration file to see how to configure them.
 
 ### hypnotoad
 
-The included webserver is [Mojolicious' hypnotoad](https://mojolicious.org/perldoc/Mojo/Server/Hypnotoad). Its configuration can be set as well.
+The included webserver is [Mojolicious' hypnotoad](https://mojolicious.org/perldoc/Mojo/Server/Hypnotoad).
+Its configuration can be set as well.
 
 ### minion
 
-[Minion](https://mojolicious.org/perldoc/Minion) is the job queue used. It requires the location where to store its SQLite database for persisting its job data.
+[Minion](https://mojolicious.org/perldoc/Minion) is the job queue used.
+It requires the location where to store its SQLite database for persisting its job data.
 
 ## Environment
 
@@ -139,6 +143,7 @@ These environment variables are used:
 - PHISHTANK_API
 
   It is advised to register an API key for the [Phishtank](https://data.phishtank.com/) blacklist and to set the key using this variable.
+  The variable is used in the default **blacklist_checker.conf**.
 
 ## Commands
 
@@ -146,11 +151,14 @@ These environment variables are used:
 
 The startup is done by **/app/blacklist_checker/script/start**. It will
 
+- download blacklists if they are missing
 - start the webserver
 - initialize a recurring job to update the blacklists
 - start the job queue
 
-Upon first startup, all blacklists will be downloaded. This will take some time. The downloaded lists will be persisted to the filesystem in **/storage/blacklists.data** (configurable) for faster startup.
+Upon first startup, all blacklists will be downloaded.
+This will take some time.
+The downloaded lists will be persisted to the filesystem in **/storage/blacklists/** (configurable) for faster startup.
 
 ### Control
 
@@ -160,7 +168,9 @@ Besides the standard commands available in every [Mojolicious](https://mojolicio
 
 - `blacklist list schedule`
 
-  This command is used during startup to initialize an update job. Please note that there shouldn't be more than **one** update job. This command will not start a new update job as long as there is already one present.
+  This command is used during startup to initialize an update job.
+  Please note that there shouldn't be more than **one** update job.
+  This command will not start a new update job as long as there is already one present.
 
 - `blacklist list status`
 
@@ -176,8 +186,111 @@ Besides the standard commands available in every [Mojolicious](https://mojolicio
 
 ## Blacklists
 
-Currently 13 blacklists are configured. Please check **/app/blacklist_checker/etc/blacklist_checker.conf** for details.
+Currently 13 blacklists are configured.
+Please check **/app/blacklist_checker/etc/blacklist_checker.conf** for details.
 
-Please note that the blacklists shouldn't be retrieved too frequently without contacting the blacklist owners.
+The number of blacklists can be extended with (relative) ease.
+You just have to give the list a name and need to define from where to download and how to extract the domain names from the downloaded file.
+Check the documentation and examples in the default configuration file.
+
+Please note that blacklists shouldn't be downloaded too frequently without contacting the blacklist owners.
 
 Please also note that it is advised to register an API key for the [Phishtank](https://data.phishtank.com/) blacklist and to configure it via the environmant variable `PHISHTANK_API`.
+
+## Errormessage
+
+### Filesystem issues
+
+- `Cannot create` *XXX*`:` *REASON*
+
+  The blacklist couldn't be saved to filesystem.
+  
+- `Failed to rename` *XXX##* `to` *XXX*`:` *REASON*
+
+  The blacklist couldn't be renamed.
+
+- `Cannot read` *XXX*`:` *REASON*
+
+  The blacklist couldn't be read from filesystem.
+
+### Configuration issues
+
+- `Missing blacklist id`
+
+  A blacklist needs to have an id, a unique name.
+
+- `Missing blacklist config for` *NAME*
+
+  Each blacklist needs to have a configuration.
+
+- *XXX* 'not defined for' *NAME*
+
+  *XXX* can be one of **reader**, **kind**, **reference** or **url**.
+  You forgot to define one of these for the blacklist *NAME*.
+
+- `no valid url defined for` *NAME*
+
+  The url for the blacklist *NAME* seems invalid.
+
+- `start` *XXX* `for` *NAME** `is neither a number nor a regexp`
+
+  The `start` property must be a number to denote the line where data starts, or a regular expression to find the line after which data starts.
+
+- `No separator regexp defined for` *NAME*
+
+  In order to split columns, you need to give a regular expression defining the column separartor.
+
+- `header` *sometext* `for` *NAME* `s neither a number nor a regexp`
+
+  The header has to be set to either a number, denoting the line in which the header (of a csv) will be found, or a regular expression matching the header line.
+
+- `header set but no column defined for` *NAME*
+
+  It's required to define in which column the domains will be found.
+
+- `Column 0 for` *NAME* `is not a valid column index. Columns are 1-based``
+- `Column` *somenumber* `for` *NAME* `is not a valid column number`
+
+  The column must exist.
+  Either a number has to be given or its name.
+
+- `No column in` *NAME* `is labeled $column.`
+
+  The column requested was not found in the blacklist file.
+
+- `Could not parse` *sometext* `with Text::CSV`
+
+  The CSV parser had difficulties "understanding" a line found in the blacklist file.
+  Check that you download the correct file and that the file looks as expected.
+
+### Other issues
+
+- `Could not create a Text::CSV reader`
+
+  If this happens it seems as if the CPAN module Text::CSV had an issue.
+
+- *###* 'response:' *sometext*
+
+  This happens when the update process couldn't contact a blacklist server.
+  It also can happen when the result callback couldn't contact the server.
+
+- `Failed to download` *URL*
+
+  A blacklist couldn't be downloaded
+
+- `Too many redirects for` *URL*
+
+  Usually this is an indicator for a misconfiguration at the blacklist server.
+  The server answered with more than the allowed number of redirects.
+  Double check with the blacklist owner or refrain from using that blacklist.
+
+- `Couldn't create` *path_to_storag*`.$index`
+- `Failed to save temporary index file`
+- `Failed to save index file`
+
+  The scanner couldn't create its index file.
+  Check existance of the directories and permissions.
+
+- `Could not update` *NAME*
+
+  The update process couldn't download a blacklist.
