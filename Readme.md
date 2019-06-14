@@ -202,16 +202,22 @@ Please also note that it is advised to register an API key for the [Phishtank](h
 ### Filesystem issues
 
 - `Cannot create` *XXX*`:` *REASON*
-
-  The blacklist couldn't be saved to filesystem.
-  
 - `Failed to rename` *XXX##* `to` *XXX*`:` *REASON*
 
-  The blacklist couldn't be renamed.
-
+  The blacklist couldn't be saved to filesystem.
+  Check existance of the directories and permissions.
+  
 - `Cannot read` *XXX*`:` *REASON*
 
   The blacklist couldn't be read from filesystem.
+  Check existance of the file and permissions.
+
+- `Couldn't create` *path_to_storage*`.$index`
+- `Failed to save temporary index file`
+- `Failed to save index file`
+
+  The scanner couldn't create its index file.
+  Check existance of the directories and permissions.
 
 ### Configuration issues
 
@@ -223,7 +229,7 @@ Please also note that it is advised to register an API key for the [Phishtank](h
 
   Each blacklist needs to have a configuration.
 
-- *XXX* 'not defined for' *NAME*
+- *XXX* `not defined for` *NAME*
 
   *XXX* can be one of **reader**, **kind**, **reference** or **url**.
   You forgot to define one of these for the blacklist *NAME*.
@@ -269,7 +275,7 @@ Please also note that it is advised to register an API key for the [Phishtank](h
 
   If this happens it seems as if the CPAN module Text::CSV had an issue.
 
-- *###* 'response:' *sometext*
+- *###* `response:` *sometext*
 
   This happens when the update process couldn't contact a blacklist server.
   It also can happen when the result callback couldn't contact the server.
@@ -283,13 +289,6 @@ Please also note that it is advised to register an API key for the [Phishtank](h
   Usually this is an indicator for a misconfiguration at the blacklist server.
   The server answered with more than the allowed number of redirects.
   Double check with the blacklist owner or refrain from using that blacklist.
-
-- `Couldn't create` *path_to_storag*`.$index`
-- `Failed to save temporary index file`
-- `Failed to save index file`
-
-  The scanner couldn't create its index file.
-  Check existance of the directories and permissions.
 
 - `Could not update` *NAME*
 
