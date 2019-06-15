@@ -221,6 +221,14 @@ Please also note that it is advised to register an API key for the [Phishtank](h
 
 ### Configuration issues
 
+- `Config error: Missing blacklists`
+
+  The config file or the blacklist sction in the config file is missing.
+
+- `Config error: No storage defined for Minion`
+
+  You need to define where to store minion's job database.
+
 - `Missing blacklist id`
 
   A blacklist needs to have an id, a unique name.

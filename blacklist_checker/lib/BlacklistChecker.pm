@@ -1,5 +1,6 @@
 package BlacklistChecker;
 use Mojo::Base 'Mojolicious';
+use Carp;
 use Blacklists;
 
 $ENV{SCANNER_NAME}= 'INI_S'; # "INI_S" instead of "BLACKLISTS" to stay compatible to the previous version
