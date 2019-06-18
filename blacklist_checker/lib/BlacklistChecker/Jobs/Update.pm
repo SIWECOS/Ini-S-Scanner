@@ -23,7 +23,7 @@ sub _update {
     my $updated= $job->app->blacklists->update;
     my $end= time;
     $job->note(
-        status   => scalar(@{$updated->{failed}}) ? 'failed' : 'updated',
+        status   => scalar($updated->{fails}) ? 'failed' : 'updated',
         duration => $end - $start,
         updated  => $updated,
         time     => Mojo::Date->new( $end )->to_datetime,
