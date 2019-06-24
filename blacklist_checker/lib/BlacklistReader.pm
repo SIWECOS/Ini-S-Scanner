@@ -37,38 +37,58 @@ sub _check {
         return undef;
     }
     my $error= "";
-    foreach my $required (qw( reader kind reference url )) {
-        next if defined $self->{config}->{$required};
-        $error.= "$required not defined for ".$self->{id}."\n";
-    }
-    my $url= $self->{config}->{url};
-    if (defined $url and $url !~ m#^(file:///?|https?://)\w+#) {
-        $error.= "no valid url defined for ".$self->{id};
-    }
-    my $reader= $self->{config}->{reader};
-    if (defined $reader) {
-        if ($reader->{start}) {
-            if ('Regexp' ne ref $reader->{start}
-                and $reader->{start}!~ /^\d+$/) {
-                $error.= "start ".$reader->{start}." for ".$self->{id}." is neither a number nor a regexp.\n";
-            }
+    if ($self->{config}{domain}) {
+        foreach my $required (qw( kind reference domain )) {
+            next if defined $self->{config}->{$required};
+            $error.= "$required not defined for ".$self->{id}."\n";
         }
-        if ($reader->{header}) {
-            $error.= "No separator regexp defined for ".$self->{id}.".\n" unless $reader->{separator} or $reader->{'Text::CSV'};
-            if ('Regexp' ne ref $reader->{header}
-                and $reader->{header}!~ /^\d+$/) {
-                $error.= "header ".$reader->{header}." for ".$self->{id}." is neither a number nor a regexp.\n";
-            }
-            if (not defined $reader->{column}) {
-                $error.= "header set but no column defined for ".$self->{id}."\n";
-            }
-        } elsif (defined $reader->{column}) {
-            if ($reader->{column}=~ /^\d+$/) {
-                if ($reader->{column} < 1) {
-                    $error.= "Column 0 for ".$self->{id}." is not a valid column index. Columns are 1-based.\n";
+        my $kind= $self->{config}->{kind};
+        if (defined $kind) {
+            $error.= "kind for ".$self->{id}." is of wrong type\n" unless 'HASH' eq ref $kind;
+        }
+    } elsif ($self->{config}{ip}) {
+        foreach my $required (qw( kind reference ip )) {
+            next if defined $self->{config}->{$required};
+            $error.= "$required not defined for ".$self->{id}."\n";
+        }
+        my $kind= $self->{config}->{kind};
+        if (defined $kind) {
+            $error.= "kind for ".$self->{id}." is of wrong type\n" unless 'HASH' eq ref $kind;
+        }
+    } else {
+        foreach my $required (qw( reader kind reference url )) {
+            next if defined $self->{config}->{$required};
+            $error.= "$required not defined for ".$self->{id}."\n";
+        }
+        my $url= $self->{config}->{url};
+        if (defined $url and $url !~ m#^(file:///?|https?://)\w+#) {
+            $error.= "no valid url defined for ".$self->{id};
+        }
+        my $reader= $self->{config}->{reader};
+        if (defined $reader) {
+            if ($reader->{start}) {
+                if ('Regexp' ne ref $reader->{start}
+                    and $reader->{start}!~ /^\d+$/) {
+                    $error.= "start ".$reader->{start}." for ".$self->{id}." is neither a number nor a regexp.\n";
                 }
-            } else {
-                $error.= "Column ".$reader->{column}." for ".$self->{id}." is not a valid column number.\n";
+            }
+            if ($reader->{header}) {
+                $error.= "No separator regexp defined for ".$self->{id}.".\n" unless $reader->{separator} or $reader->{'Text::CSV'};
+                if ('Regexp' ne ref $reader->{header}
+                    and $reader->{header}!~ /^\d+$/) {
+                    $error.= "header ".$reader->{header}." for ".$self->{id}." is neither a number nor a regexp.\n";
+                }
+                if (not defined $reader->{column}) {
+                    $error.= "header set but no column defined for ".$self->{id}."\n";
+                }
+            } elsif (defined $reader->{column}) {
+                if ($reader->{column}=~ /^\d+$/) {
+                    if ($reader->{column} < 1) {
+                        $error.= "Column 0 for ".$self->{id}." is not a valid column index. Columns are 1-based.\n";
+                    }
+                } else {
+                    $error.= "Column ".$reader->{column}." for ".$self->{id}." is not a valid column number.\n";
+                }
             }
         }
     }
@@ -85,6 +105,7 @@ sub fetch {
     return undef unless $self->_check;
     my $config= $self->{config};
     my $reader= $config->{reader};
+    return 0 unless $reader;
     # Retrieve the blacklist
     # the do-block will split into lines
     my ($last_modified, @lines)= do {

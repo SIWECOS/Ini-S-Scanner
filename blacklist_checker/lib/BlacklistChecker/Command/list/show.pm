@@ -20,6 +20,9 @@ sub run {
         print "  Status   : ",$lists->{$_}{status},"\n";
         print "  Entries  : ",$lists->{$_}{entries},"\n";
         print "  File     : ",$filename,( -r $filename ? "\n" : " (file not found)\n");
+      } elsif ($lists->{$_}{status} eq 'dns_lookup') {
+        print "  Reference: ",$lists->{$_}{reference},"\n";
+        print "  Status   : ",$lists->{$_}{status},"\n";
       } else {
         print "  no data\n"
       }

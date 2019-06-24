@@ -42,6 +42,7 @@ use BinaryTreeFile;
 use SiwecosResult;
 use SiwecosTest;
 use SiwecosTestDetail;
+use Socket;
 
 use Mojo::UserAgent;
 use Mojo::JSON;
@@ -209,9 +210,21 @@ sub update {
     my $failed= 0;
     my $kept= 0;
     foreach my $blacklist_id (keys %{$self->{data}}) {
-        my $bintree_file= $self->{storage} . '/' . $blacklist_id;
         my $reader= $self->{readers}{$blacklist_id};
         next unless $reader;
+        if ($reader->{config}{domain}) {
+            ++$updated if $reader->{config}{domain} ne ( $self->{data}{$blacklist_id}{domain} || '' ) ;
+            $self->{data}{$blacklist_id}{status}= 'dns_lookup';
+            $self->{data}{$blacklist_id}{domain}= $reader->{config}{domain};
+            next;
+        }
+        if ($reader->{config}{ip}) {
+            ++$updated if $reader->{config}{ip} ne ( $self->{data}{$blacklist_id}{ip} || '' ) ;
+            $self->{data}{$blacklist_id}{status}= 'dns_lookup';
+            $self->{data}{$blacklist_id}{ip}= $reader->{config}{ip};
+            next;
+        }
+        my $bintree_file= $self->{storage} . '/' . $blacklist_id;
         my $last_modified= $self->{data}{$blacklist_id}{updated};
         # if the file is missing we load regardless
         $last_modified= 0 if not -r $bintree_file;
@@ -294,15 +307,20 @@ sub status_string {
         $_= [ sort keys %$_ ];
     }
     my $output= '';
-    foreach my $status (qw( save_error failed kept updated )) {
+    foreach my $status (qw( save_error failed dns_lookup kept updated )) {
         next unless $liststatus{$status};
         $output.= "Lists $status:\n";
         foreach my $id (@{$liststatus{$status}}) {
-            my $file_missing= -r $self->{data}{$id}{bintree}->filename ? '' : ' file not found'; 
-            $output.= sprintf "    %-${width}s (%s)%s\n",
-                $id,
-                Mojo::Date->new($self->{data}{$id}{updated})->to_datetime,
-                $file_missing;
+            if ($status eq 'dns_lookup') {
+                $output.= sprintf "    %-${width}s\n",
+                    $id;
+            } else {
+                my $file_missing= -r $self->{data}{$id}{bintree}->filename ? '' : ' file not found'; 
+                $output.= sprintf "    %-${width}s (%s)%s\n",
+                    $id,
+                    Mojo::Date->new($self->{data}{$id}{updated})->to_datetime,
+                    $file_missing;
+            }
         }
     }
     return $output;
@@ -383,17 +401,58 @@ sub _checkmatch {
     my($self, $domain)= @_;
     my %tests;
     while (my($list, $bldata)= each %{$self->{data}}) {
-        next unless ref $bldata->{bintree};
-        next unless $bldata->{bintree}->reverse_domain_match($domain);
-        # Store the information as a SiwecosTestDetail
-        $tests{uc $bldata->{kind}}{$list}= SiwecosTestDetail->new({
-            translationStringId => 'DOMAIN_FOUND',
-            placeholders => {
-                LISTNAME => $list,
-                LISTURL => $bldata->{reference},
-                DOMAIN => $domain,
-            },
-        });
+        my $bl_provider;
+        if (ref $bldata->{bintree}) {
+            next unless $bldata->{bintree}->reverse_domain_match($domain);
+            # Store the information as a SiwecosTestDetail
+            $tests{uc $bldata->{kind}}{$list}= SiwecosTestDetail->new({
+                translationStringId => 'DOMAIN_FOUND',
+                placeholders => {
+                    LISTNAME => $list,
+                    LISTURL => $bldata->{reference},
+                    DOMAIN => $domain,
+                },
+            });
+        } elsif ($bl_provider= $bldata->{domain}) {
+            my ($name,$aliases,$addrtype,$length,@addrs) = gethostbyname("$domain.$bl_provider");
+            my %already_found;
+            foreach my $addr (@addrs) {
+                my $kind= $bldata->{kind}{$addr};
+                next unless $kind;
+                $kind= uc $kind;
+                next if $already_found{$kind}++;
+                $tests{$kind}{$list}= SiwecosTestDetail->new({
+                    translationStringId => 'DOMAIN_FOUND',
+                    placeholders => {
+                        LISTNAME => $list,
+                        LISTURL => $bldata->{reference},
+                        DOMAIN => $domain,
+                    },
+                });
+            }
+        } elsif ($bl_provider= $bldata->{ip}) {
+            my ($name,$aliases,$addrtype,$length,@addrs) = gethostbyname($domain);
+            foreach my $my_addr (@addrs) {
+                my $ip= inet_ntoa $my_addr;
+                my $reverse_ip= join '.', reverse split /\./, $ip;
+                my ($name,$aliases,$addrtype,$length,@addrs) = gethostbyname("$reverse_ip.$bl_provider");
+                my %already_found;
+                foreach my $addr (@addrs) {
+                    my $kind= $bldata->{kind}{$addr};
+                    next unless $kind;
+                    $kind= uc $kind;
+                    next if $already_found{$kind}++;
+                    $tests{$kind}{$list}= SiwecosTestDetail->new({
+                        translationStringId => 'IP_FOUND',
+                        placeholders => {
+                            LISTNAME => $list,
+                            LISTURL => $bldata->{reference},
+                            IP      => $ip,
+                        },
+                    });
+                }
+            }
+        }
     }
     return \%tests;
 }
@@ -402,7 +461,12 @@ sub _listtypes {
     my($self)= @_;
     my %listtypes;
     foreach my $bldata (values %{$self->{data}}) {
-        ++$listtypes{uc ($bldata->{kind} || '')};
+        my $kind= $bldata->{kind};
+        if (ref $kind) {
+            ++$listtypes{ uc $_ } foreach (values %$kind );
+        } else {
+            ++$listtypes{uc ($kind || '')};
+        }
     }
     return [ sort keys %listtypes ];
 }

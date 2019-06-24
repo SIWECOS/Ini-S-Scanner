@@ -7,7 +7,7 @@ BlacklistChecker
 
 ### Category
 
-Betrug
+Phishing
 
 ### Headline
 
@@ -15,7 +15,7 @@ Betrug
 
 ### Description
 
-Wenn Ihre Domain in einer Phishing-Blacklist aufgeführt wird, wurde sie vermutlich zu [Phishing Zwecken] missbraucht und dem Listenbetreiber gemeldet.
+Wenn Ihre Domain in einer Phishing-Blacklist aufgeführt wird, wurde sie vermutlich zu [[Phishing|Phishing Zwecken]] missbraucht und dem Listenbetreiber gemeldet.
 
 ### Background
 
@@ -29,23 +29,22 @@ Ihre Webseite wurde vermutlich bereits von Kriminellen missbraucht.
 
 Wenn Ihre Domain in einer Phishing-Liste gefunden wurde:
 
-**Nehmen Sie die Webseite offline!**
+<div class="attention">'''Nehmen Sie die Webseite offline!'''</div>
 
-Es ist möglich, dass Sie mit der Webseite Phishing-Inhalte zu Verfügung stellen und Kriminelle persönliche Daten darüber sammeln. Auch vermeiden Sie damit, dass Google Ihre Webseite aus dem Index nimmt, was ein eventuelles positives Ranking annullieren würde. So kommen Sie auch einer eventuellen Sperre Ihrer Webseite seitens Ihres Providers/Hosters zuvor.
+Es ist möglich, dass Sie mit der Webseite Phishing-Inhalte zur Verfügung stellen und Kriminelle persönliche Daten darüber sammeln. Auch vermeiden Sie damit, dass Google Ihre Webseite aus dem Index nimmt, was ein eventuelles positives Ranking annullieren würde. So kommen Sie auch einer eventuellen Sperre Ihrer Webseite seitens Ihres Providers/Hosters zuvor.
 
-- Stellen Sie fest, wie und wann es Fremden möglich war, auf Ihre Domain zuzugreifen.
+* Stellen Sie fest, wie und wann es Fremden möglich war, auf Ihre Domain zuzugreifen.
 Überprüfen Sie Ihre Logdateien auf unberechtigte Zugriffe von unbekannten Quell-IP-Adressen. Als Ausgangspunkt Ihrer Recherche könnte Ihnen der Zeitstempel der manipulierten, bzw. hochgeladenen Datei dienen und einen Hinweis auf den Zeitpunkt der Attacke und das sogenannte Einfallstor geben.
-- Ändern Sie Ihre Zugangsdaten!
-- Webfrontend (Hosting-Vertrag, Content-Management-System)
-- FTP-, SSH-Zugänge
-- Datenbank - starke Passwörter nutzen
-- Spielen Sie ein schadcodefreies Backup ein!
+* Ändern Sie Ihre Zugangsdaten!
+* Webfrontend (Hosting-Vertrag, Content-Management-System)
+* FTP-, SSH-Zugänge
+* Datenbank - [[Starke Passwörter]] nutzen
+* Spielen Sie ein schadcodefreies Backup ein!
 Löschen Sie hierzu sämtliche Dateien auf Ihrem Webspace. Damit stellen Sie sicher, dass Sie keine Fremddateien, die den Angreifern als "Hintertüren" dienen aus der vormals kompromittierten Umgebung übernehmen. Überprüfen Sie vor der Wiederherstellung, ob Ihr Backup bereits den von uns gefundenen Schadcode beinhaltet und greifen Sie bei Bedarf auf eine noch ältere Sicherung zurück. Sollte das Backup "schadcodefrei" sein, stellen Sie dieses wieder her und führen danach die Updates im System durch. Erst dann stellen Sie die Webseite wieder online.
 
-- Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
-- Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
-
-### Link
+* Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
+* Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
+* ### Link
 
 Phishing-Check
 
@@ -63,7 +62,7 @@ Ihre Domain wurde in keiner uns bekannten Phishing-Liste gefunden.
 
 ### Category
 
-Betrug
+Malware
 
 ### Headline
 
@@ -71,11 +70,11 @@ Betrug
 
 ### Description
 
-[Malware] bezeichnet Software, die einem Computer, und damit letzlich auch seinem Besitzer, Schaden zufügen kann. Malware bezeichnet dabei alle Arten von schädlichen Programmen wie etwa [Viren], [Trojaner], [Spyware], [Dialer], [Dropper], [Rootkits] und [Keylogger].
+[[Malware]] bezeichnet Software, die einem Computer, und damit letztlich auch seinem Besitzer, Schaden zufügen kann. Malware bezeichnet dabei alle Arten von schädlichen Programmen wie etwa [[Virus|Viren]], [[Trojaner]], [[Spyware]], [[Dialer]], Dropper, [[Rootkit|Rootkits]] und [[Keylogger]].
 
 ### Background
 
-Kriminelle verschaffen sich Zugang zur Webseite und hinterlegen dort Schadcode um Besuchern unter anderm über  [Drive-by-Downloads] Schadsoftware ([Malware]) aufspielen.
+Kriminelle verschaffen sich Zugang zur Webseite und hinterlegen dort Schadcode, um Besuchern unter anderm über [[Drive-by-Download|Drive-by-Downloads]] Schadsoftware ([[Malware]]) aufspielen.
 
 ### Consequence
 
@@ -85,29 +84,29 @@ Bei einem Aufruf der Seite besteht die Gefahr, dass der Rechner des Besuchers mi
 
 Wenn Ihre Domain in einer Malware-Liste gefunden wurde:
 
-**Nehmen Sie die Webseite offline!**
+<div class="attention">'''Nehmen Sie die Webseite offline!'''</div>
 
-Es ist möglich, dass Sie mit der Webseite Malware-Inhalte zu Verfügung stellen. Auch vermeiden Sie damit, dass Google Ihre Webseite aus dem Index nimmt, was ein eventuelles positives Ranking annullieren würde. So kommen Sie auch einer eventuellen Sperre Ihrer Webseite seitens Ihres Providers/Hosters zuvor.
+Es ist möglich, dass Sie mit der Webseite Malware-Inhalte zur Verfügung stellen. Auch vermeiden Sie damit, dass Google Ihre Webseite aus dem Index nimmt, was ein eventuelles positives Ranking annullieren würde. So kommen Sie auch einer eventuellen Sperre Ihrer Webseite seitens Ihres Providers/Hosters zuvor.
 
-- Stellen Sie fest, wie und wann es Fremden möglich war, auf Ihre Domain zuzugreifen.
+* Stellen Sie fest, wie und wann es Fremden möglich war, auf Ihre Domain zuzugreifen.
   Überprüfen Sie Ihre Logdateien auf unberechtigte Zugriffe von unbekannten Quell-IP-Adressen. Als Ausgangspunkt Ihrer Recherche könnte Ihnen der Zeitstempel der manipulierten, bzw. hochgeladenen Datei dienen und einen Hinweis auf den Zeitpunkt der Attacke und das sogenannte Einfallstor geben.
-- Ändern Sie Ihre Zugangsdaten!
-- Webfrontend (Hosting-Vertrag, Content-Management-System)
-- FTP-, SSH-Zugänge
-- Datenbank - starke Passwörter nutzen
-- Spielen Sie ein schadcodefreies Backup ein!
+* Ändern Sie Ihre Zugangsdaten!
+* Webfrontend (Hosting-Vertrag, Content-Management-System)
+* FTP-, SSH-Zugänge
+* Datenbank - [[Starke Passwörter]] nutzen
+* Spielen Sie ein schadcodefreies Backup ein!
   Löschen Sie hierzu sämtliche Dateien auf Ihrem Webspace. Damit stellen Sie sicher, dass Sie keine Fremddateien, die den Angreifern als "Hintertüren" dienen aus der vormals kompromittierten Umgebung übernehmen. Überprüfen Sie vor der Wiederherstellung, ob Ihr Backup bereits den von uns gefundenen Schadcode beinhaltet und greifen Sie bei Bedarf auf eine noch ältere Sicherung zurück. Sollte das Backup "schadcodefrei" sein, stellen Sie dieses wieder her und führen danach die Updates im System durch. Erst dann stellen Sie die Webseite wieder online.
 
-- Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
-- Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
-
+* Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
+* Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
+* 
 ### Link
 
 Malware-Check
 
 ### Negative
 
-Ihre Domain wurde in Malware-Listen gefunden
+Ihre Domain wurde in Malware-Listen gefunden.
 
 ### Positive
 
@@ -115,11 +114,67 @@ Ihre Domain wurde in keiner uns bekannten Malware-Liste gefunden.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+## BOTNET
+
+### Category
+
+Attacks
+
+### Headline
+
+Überprüfung auf Botnet Listeneintrag
+
+### Description
+
+[[Botnetze|Botnet]] bezeichnet eine Anzahl von Geräten, die über das Internet verbunden sind und auf denen mindestens ein [[Bot]] läuft.
+
+### Background
+
+Schädigende Bots können u. a. zum E-Mail-Spam-Versand oder zu DDoS-Attacken genutzt werden.
+
+### Consequence
+
+Ein System, das in ein Botnet integriert ist, kann sobald eine Internetverbindung besteht, auf ferngesteuerte Befehle von Cyberkriminellen reagieren. Dadurch kann das System unbemerkt zum Versand von [[Spam]] verwendet werden, zum Durchführen von [[DDoS|DDoS-Attacken]] oder für [[Phishing]] missbraucht werden. Ein Botnet erhält und vergrößert sich selbst, indem es aktiv nach verwundbaren IPs sucht und entsprechende Schadsoftware weiter verbreitet und somit weitere Computer infiziert.
+
+### Solution_Tips
+
+Wenn Ihre Domain in einer Botnet-Liste gefunden wurde:
+
+<div class="attention">'''Nehmen Sie die Webseite offline!'''</div>
+
+Es ist möglich, dass Sie mit der Webseite Botnet-Inhalte zur Verfügung stellen. Auch vermeiden Sie damit, dass Google Ihre Webseite aus dem Index nimmt, was ein eventuelles positives Ranking annullieren würde. So kommen Sie auch einer eventuellen Sperre Ihrer Webseite seitens Ihres Providers/Hosters zuvor.
+
+* Stellen Sie fest, wie und wann es Fremden möglich war, auf Ihre Domain zuzugreifen.
+  Überprüfen Sie Ihre Logdateien auf unberechtigte Zugriffe von unbekannten Quell-IP-Adressen. Als Ausgangspunkt Ihrer Recherche könnte Ihnen der Zeitstempel der manipulierten, bzw. hochgeladenen Datei dienen und einen Hinweis auf den Zeitpunkt der Attacke und das sogenannte Einfallstor geben.
+* Ändern Sie Ihre Zugangsdaten!
+* Webfrontend (Hosting-Vertrag, Content-Management-System)
+* FTP-, SSH-Zugänge
+* Datenbank - [[Starke Passwörter]] nutzen
+* Spielen Sie ein schadcodefreies Backup ein!
+  Löschen Sie hierzu sämtliche Dateien auf Ihrem Webspace. Damit stellen Sie sicher, dass Sie keine Fremddateien, die den Angreifern als [[Backdoor|"Hintertüren"]] dienen aus der vormals kompromittierten Umgebung übernehmen. Überprüfen Sie vor der Wiederherstellung, ob Ihr Backup bereits den von uns gefundenen Schadcode beinhaltet und greifen Sie bei Bedarf auf eine noch ältere Sicherung zurück. Sollte das Backup "schadcodefrei" sein, stellen Sie dieses wieder her und führen danach die Updates im System durch. Erst dann stellen Sie die Webseite wieder online.
+
+* Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
+* Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
+* 
+### Link
+
+Botnet-Check
+
+### Negative
+
+Ihre Domain wurde in Botnet-Listen gefunden.
+
+### Positive
+
+Ihre Domain wurde in keiner uns bekannten Botnet-Liste gefunden.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 ## SPAM
 
 ### Category
 
-Werbung
+SPAM
 
 ### Headline
 
@@ -159,4 +214,8 @@ Ihre Domain wurde in keiner uns bekannten Spam-Liste gefunden.
 
 ### DOMAIN_FOUND
 
-    In <a href=":LISTURL" target=":LISTNAME">:LISTNAME</a> wurde :DOMAIN gefunden.
+    In <a href=":LISTURL" target=":LISTNAME">:LISTNAME</a> wurde ihre domain :DOMAIN gefunden.
+
+### IP_FOUND
+
+    In <a href=":LISTURL" target=":LISTNAME">:LISTNAME</a> wurde ihre IP :IP gefunden.
