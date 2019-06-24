@@ -29,7 +29,7 @@ sub _update {
         time     => Mojo::Date->new( $end )->to_datetime,
         next     => Mojo::Date->new( $start + $interval )->to_datetime,
     );
-    $job->retry( { delay => $interval } );
+    $job->retry( { delay => $interval - ( time - $start ) } );
 }
 
 1;
