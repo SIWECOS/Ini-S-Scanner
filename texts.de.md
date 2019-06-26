@@ -44,7 +44,8 @@ Löschen Sie hierzu sämtliche Dateien auf Ihrem Webspace. Damit stellen Sie sic
 
 * Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
 * Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
-* ### Link
+
+### Link
 
 Phishing-Check
 
@@ -99,7 +100,7 @@ Es ist möglich, dass Sie mit der Webseite Malware-Inhalte zur Verfügung stelle
 
 * Sollten Sie keine Sicherung Ihres Internetauftrittes besitzen, ziehen Sie eine komplette Neuinstallation in Betracht. Manuelle Bereinigungen nehmen in der Regel sehr viel mehr Zeit in Anspruch und sollten nur von Fachpersonal durchgeführt werden.
 * Überprüfen Sie Ihre lokalen Rechner auf Schadsoftware! Unter der Webseite botfrei.de finden Sie dazu Hilfestellungen und Programme. Mit Hilfe des DE-Cleaners können Sie Ihren PC von verschiedenen Schadprogrammen säubern. (https://www.botfrei.de/de/eucleaner/index.html)
-* 
+
 ### Link
 
 Malware-Check
