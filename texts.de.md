@@ -1,7 +1,7 @@
 
-# BLACKLISTS
+# INI_S
 
-BlacklistChecker
+Initiative-S Scanner
 
 ## PHISHING
 

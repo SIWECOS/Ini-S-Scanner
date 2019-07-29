@@ -1,7 +1,7 @@
 
-# BLACKLISTS
+# INI_S
 
-BlacklistChecker
+Initiative-S Scanner
 
 ## PHISHING
 
@@ -127,7 +127,7 @@ Botnet Check
 
 ### Description
 
-[[Botnets|Botnet]] refers to a number of devices that are connected via the Internet and on which at least one [[Bot]] is running.
+Botnet refers to a number of devices that are connected via the Internet and on which at least one [[Bot]] is running.
 
 ### Background
 
