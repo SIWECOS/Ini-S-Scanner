@@ -1,0 +1,22 @@
+#!/bin/sh
+{
+    blacklist list status > /dev/null
+    case $? in
+    1) echo "Downloading blacklists."
+       blacklist list update
+       ;;
+    2) echo
+       echo "Storage directory is missing. Please create it."
+       exit 2
+       ;;
+    esac
+} && {
+    echo Start the server
+    hypnotoad /app/blacklist_checker/script/blacklist_checker
+} && {
+    echo Initialize list updates
+    blacklist list schedule
+} && {
+    echo Start the minions
+    blacklist jobqueue start
+}

@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  blacklistchecker:
+    build: .
+    environment:
+    - MOJO_MODE=production
+    - PHISHTANK_API=${SECRET_PHISHTANK_API}
+    volumes:
+    - storage:/home/storage
+    tty: true
+volumes:
+  storage:

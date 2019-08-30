@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use Cwd qw( realpath );
+use File::Spec::Functions;
+use lib realpath( catdir( $FindBin::RealBin, updir, 'lib' ));
+
+use Mojolicious::Commands;
+
+# Start command line interface for application
+Mojolicious::Commands->start_app('BlacklistChecker');
