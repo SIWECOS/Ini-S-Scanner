@@ -45,7 +45,7 @@ sub check {
     if ($hash->{callbackurls} and ref $hash->{callbackurls} ne 'ARRAY') {
         $v->error(callbackurls => ['not an array']);
     } else {
-        $v->optional('callbackurls')->urls();
+        $v->optional('callbackurls');
     }
     
     # userAgent
