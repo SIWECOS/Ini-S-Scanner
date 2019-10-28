@@ -36,7 +36,7 @@ sub check {
     $v->input($hash);
 
     # url
-    $v->required('url')->urls();
+    $v->required('url');
 
     # dangerlevel
     $v->optional('dangerlevel')->num(1, 10); # ignored
