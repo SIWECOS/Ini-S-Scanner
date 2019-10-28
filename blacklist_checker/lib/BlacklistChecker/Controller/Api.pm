@@ -1,7 +1,6 @@
 package BlacklistChecker::Controller::Api;
 use Mojo::Base 'Mojolicious::Controller';
 
-# Add a urls-validation
 sub _urls {
     my ($v, $name, @args) = @_;
     foreach my $value (@args) {
@@ -16,7 +15,7 @@ sub _urls {
 sub new {
     my $class= shift;
     my $self= $class->SUPER::new(@_);
-    $self->app->validator->add_check( urls => \&_urls );
+    $self->app->validator->add_check( urls => \&_urls ); 
     return $self;
 }
 
@@ -36,7 +35,7 @@ sub check {
     $v->input($hash);
 
     # url
-    $v->required('url')->urls();
+    $v->required('url');
 
     # dangerlevel
     $v->optional('dangerlevel')->num(1, 10); # ignored
