@@ -1,22 +1,9 @@
 package BlacklistChecker::Controller::Api;
 use Mojo::Base 'Mojolicious::Controller';
 
-# Add a urls-validation
-sub _urls {
-    my ($v, $name, @args) = @_;
-    foreach my $value (@args) {
-        my $url = Mojo::URL->new($value);
-        if ($url->scheme ne 'https' and $url->scheme ne 'http' ) {
-            return "$value is not an accepted url";
-        }
-    }
-    return undef;
-}
-
 sub new {
     my $class= shift;
     my $self= $class->SUPER::new(@_);
-    $self->app->validator->add_check( urls => \&_urls );
     return $self;
 }
 
