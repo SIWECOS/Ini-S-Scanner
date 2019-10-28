@@ -1,12 +1,6 @@
 package BlacklistChecker::Controller::Api;
 use Mojo::Base 'Mojolicious::Controller';
 
-sub new {
-    my $class= shift;
-    my $self= $class->SUPER::new(@_);
-    return $self;
-}
-
 sub _urls {
     my ($v, $name, @args) = @_;
     foreach my $value (@args) {
@@ -16,6 +10,13 @@ sub _urls {
         }
     }
     return undef;
+}
+
+sub new {
+    my $class= shift;
+    my $self= $class->SUPER::new(@_);
+    $self->app->validator->add_check( urls => \&_urls ); 
+    return $self;
 }
 
 sub check {
